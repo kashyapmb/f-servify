@@ -6,12 +6,15 @@ import Grid from "@mui/material/Grid";
 import LeftSidebar from "./LeftSidebar";
 import RightSidebar from "./RightSidebar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ProviderHome() {
+  const navigate = useNavigate();
 
   const [user, setUser] = useState();
 
   useEffect(() => {
+    console.log("Called");
 
     if (localStorage.getItem("token")) {
       axios
@@ -28,7 +31,7 @@ function ProviderHome() {
           console.error("Error fetching user details:", error);
         });
     } else {
-      console.log("No token found in localStorage. User is not logged in.");
+      navigate("/providerlogin");
     }
   }, []);
 

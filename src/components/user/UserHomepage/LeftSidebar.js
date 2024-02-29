@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { AiFillHome, AiOutlineHome } from "react-icons/ai";
+import { FaHeart } from "react-icons/fa";
+import { MdCloudDone, MdPersonSearch } from "react-icons/md";
 
 function LeftSidebar() {
   return (
@@ -9,7 +11,6 @@ function LeftSidebar() {
         sx={{
           pt: "3rem",
           height: "80vh",
-          paddingLeft: "5rem",
           borderRadius: "3rem",
           margin: "1rem",
 
@@ -23,11 +24,33 @@ function LeftSidebar() {
           top: "2rem",
         }}
       >
-        <img src="images/servifyLogo.png" style={{ width: "12rem" }} />
-        <Box sx={{ mt: "2rem", fontSize: "1.4rem" }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
-            <AiFillHome />
-            <Box>Home</Box>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <img src="images/servifyLogo.png" style={{ width: "12rem" }} />
+        </Box>
+        <Box sx={{ ml: "3rem" }}>
+          <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+              <AiFillHome />
+              <Box>Home</Box>
+            </Box>
+          </Box>
+          <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+              <FaHeart />
+              <Box>Favourites</Box>
+            </Box>
+          </Box>
+          <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+              <MdCloudDone />
+              <Box>Taken Services</Box>
+            </Box>
+          </Box>
+          <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+              <MdPersonSearch />
+              <Box>Your Search Activity</Box>
+            </Box>
           </Box>
         </Box>
       </Box>

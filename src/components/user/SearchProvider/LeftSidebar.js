@@ -3,14 +3,22 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { AiFillHome, AiOutlineHome } from "react-icons/ai";
 import { FaLocationArrow } from "react-icons/fa";
+import { services } from "../../../data/services";
 
 function LeftSidebar() {
   const city = localStorage.getItem("servifyCityName");
-  const [service, setService] = useState();
+  const [domain, setDomain] = useState();
+  const [obj, setObj] = useState({});
   useEffect(() => {
+    // fetch domain from  url
     const currentURL = window.location.href;
     const parts = currentURL.split("/");
-    setService(parts[parts.length - 1]);
+    setDomain(parts[parts.length - 1]);
+    // set obj by using domain
+    services.map((option) => {
+      if (domain == option.domain) setObj(option);
+    });
+    console.log(obj);
   });
   return (
     <Box
@@ -38,6 +46,7 @@ function LeftSidebar() {
           alignItems: "center",
         }}
       >
+        {/* cityname */}
         <Box
           sx={{
             display: "flex",
@@ -49,6 +58,7 @@ function LeftSidebar() {
           <FaLocationArrow />
           <Box>{city}</Box>
         </Box>
+        {/* service img and name */}
         <Box
           sx={{
             width: "10rem",
@@ -65,8 +75,20 @@ function LeftSidebar() {
             cursor: "pointer",
           }}
         >
-          <img src="/images/typeuser.png" style={{ width: "5rem" }} />
-          <Box sx={{ textAlign: "center", margin: "0.5rem", textTransform:'capitalize' }}>{service}</Box>
+          <img
+            src={`/images/services/${obj.img}`}
+            style={{ width: "5rem" }}
+            alt="Image"
+          />
+          <Box
+            sx={{
+              textAlign: "center",
+              margin: "0.5rem",
+              textTransform: "capitalize",
+            }}
+          >
+            {obj.value}
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 function Recovered() {
 	const navigate = useNavigate()
-	const navigateToProviderHomePage = () => [navigate("/providerhome")]
+	const navigateToProviderHomePage = () => [navigate("/serviceprovider")]
 	return (
 		<>
 			<Box

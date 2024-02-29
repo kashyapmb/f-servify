@@ -20,6 +20,9 @@ import { useNavigate } from "react-router-dom";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { cities } from "../../../data/cities";
+import { services } from "../../../data/services";
 
 const steps = ["Personal Information", "Professional Information"];
 
@@ -27,18 +30,16 @@ export default function SignUp() {
   const dataObj = {
     fname: "",
     lname: "",
-    mobile: 0,
+    mobile: "",
     email: "",
     password: "",
     cpassword: "",
-    age: 0,
+    age: null,
+    gender: "",
     city: "",
-    address: "",
+    location: "",
     profession: "",
-    profilePhoto: "",
-    uploadImage: [],
-    actualrating: 0,
-    completedwork: 0,
+    domain: "",
   };
   const [formData, setFormData] = useState(dataObj);
 
@@ -50,8 +51,23 @@ export default function SignUp() {
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
-    // console.log(name)
     setFormData({ ...formData, [name]: value });
+    console.log(formData);
+  };
+  const ageInputHandler = (e) => {
+    const { name, value } = e.target;
+    if (/^\d{0,2}$/.test(value)) {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+  const professionInputHandler = (e) => {
+    const { name, value } = e.target;
+    let updatedFormData = { ...formData, [name]: value };
+    const selectedService = services.find((obj) => obj.value === value);
+    if (selectedService) {
+      updatedFormData = { ...updatedFormData, domain: selectedService.domain };
+    }
+    setFormData(updatedFormData);
   };
 
   const handleSubmit = async (event) => {
@@ -77,22 +93,22 @@ export default function SignUp() {
 
   const handleNext = (e) => {
     if (activeStep === 0) {
-      if (
-        formData.fname &&
-        formData.lname &&
-        formData.mobile &&
-        formData.email &&
-        formData.password &&
-        formData.cpassword
-      ) {
-        if (formData.password == formData.cpassword) {
-          setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        } else {
-          alert("Password and C. Password should be same");
-        }
+      // if (
+      //   formData.fname &&
+      //   formData.lname &&
+      //   formData.mobile &&
+      //   formData.email &&
+      //   formData.password &&
+      //   formData.cpassword
+      // ) {
+      if (formData.password == formData.cpassword) {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
       } else {
-        alert("Enter all the information");
+        alert("Password and C. Password should be same");
       }
+      // } else {
+      //   alert("Enter all the information");
+      // }
     }
     if (activeStep === 1) {
       if (
@@ -112,6 +128,12 @@ export default function SignUp() {
   const [activeStep, setActiveStep] = React.useState(0);
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  // temporary
+  const [age, setAge] = React.useState("");
+  const handleChange = (event) => {
+    setAge(event.target.value);
   };
 
   return (
@@ -178,36 +200,6 @@ export default function SignUp() {
                 {activeStep === 0 && (
                   <React.Fragment>
                     <Grid container spacing={2}>
-                      {/* <Grid item xs={12}>
-													<Box
-														sx={{
-															px: "1rem",
-															py: "0.6rem",
-															display: "flex",
-															background: "#fff",
-															border: "1px solid black",
-															color: "black",
-															fontWeight: "600",
-															fontSize: "1rem",
-															borderRadius: "0.3rem",
-															":hover": {
-																color: "white",
-																background: "#5f6160",
-																transition: "0.3s",
-																cursor: "pointer",
-															},
-														}}
-														onClick={handleClick}
-													>
-														Upload a Profile Photo *
-													</Box>
-													<input
-														type="file"
-														onChange={handleChange}
-														ref={hiddenFileInput}
-														style={{ display: "none" }} // Make the file input element invisible
-													/>
-												</Grid> */}
                       <Grid item xs={12} sm={6}>
                         <TextField
                           autoComplete="given-name"
@@ -216,7 +208,7 @@ export default function SignUp() {
                           fullWidth
                           id="firstname"
                           label="First Name"
-                          autoFocus
+                          value={formData.fname}
                           onChange={inputHandler}
                         />
                       </Grid>
@@ -227,7 +219,7 @@ export default function SignUp() {
                           id="lastName"
                           label="Last Name"
                           name="lname"
-                          autoComplete="family-name"
+                          value={formData.lname}
                           onChange={inputHandler}
                         />
                       </Grid>
@@ -235,13 +227,33 @@ export default function SignUp() {
                         <TextField
                           required
                           fullWidth
-                          id="mobile"
-                          label="Mobile No."
-                          name="mobile"
-                          autoComplete="mobile"
-                          onChange={inputHandler}
+                          name="age"
+                          label="Age"
+                          type="text"
+                          onChange={ageInputHandler}
+                          value={formData.age}
                         />
                       </Grid>
+                      <Grid item xs={12}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">
+                            Gender
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={formData.gender}
+                            label="Gender"
+                            name="gender"
+                            onChange={inputHandler}
+                          >
+                            <MenuItem value={"Male"}>Male</MenuItem>
+                            <MenuItem value={"Female"}>Female</MenuItem>
+                            <MenuItem value={"Other"}>Other</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
                       <Grid item xs={12}>
                         <TextField
                           required
@@ -250,6 +262,7 @@ export default function SignUp() {
                           label="Email Address"
                           name="email"
                           autoComplete="email"
+                          value={formData.email}
                           onChange={inputHandler}
                         />
                       </Grid>
@@ -261,6 +274,7 @@ export default function SignUp() {
                           label="Password"
                           type="password"
                           id="password"
+                          value={formData.password}
                           onChange={inputHandler}
                         />
                       </Grid>
@@ -272,6 +286,7 @@ export default function SignUp() {
                           label="Confirm Password"
                           type="password"
                           id="cpassword"
+                          value={formData.cpassword}
                           onChange={inputHandler}
                         />
                       </Grid>
@@ -285,47 +300,83 @@ export default function SignUp() {
                         <TextField
                           required
                           fullWidth
-                          name="age"
-                          label="Age"
-                          type="number"
-                          id="age"
-                          autoComplete="age"
+                          id="mobile"
+                          label="Mobile No."
+                          name="mobile"
+                          autoComplete="mobile"
+                          value={formData.mobile}
                           onChange={inputHandler}
                         />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label2">
+                            Profession
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label2"
+                            id="demo-simple-select"
+                            value={formData.profession}
+                            label="Profession"
+                            name="profession"
+                            onChange={professionInputHandler}
+                          >
+                            {services.map((obj) => {
+                              return (
+                                <MenuItem value={obj.value}>
+                                  {obj.value}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        </FormControl>
                       </Grid>
                       <Grid item xs={12}>
                         <TextField
                           required
                           fullWidth
-                          name="city"
-                          label="City"
-                          id="city"
-                          autoComplete="city"
+                          name="location"
+                          label="Location"
+                          value={formData.location}
                           onChange={inputHandler}
                         />
                       </Grid>
                       <Grid item xs={12}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">
+                            City
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={formData.city}
+                            label="City"
+                            name="city"
+                            onChange={inputHandler}
+                          >
+                            {cities.map((obj) => {
+                              return (
+                                <MenuItem value={obj.value}>
+                                  {obj.value}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      {/* this is hidden field...just paatiya....aana vagar width set noti thati  */}
+                      <Grid item xs={12} sx={{ visibility: "hidden" }}>
                         <TextField
                           required
                           fullWidth
-                          name="address"
-                          label="Address"
-                          id="address"
-                          autoComplete="address"
-                          onChange={inputHandler}
+                          name="temp"
+                          label="temp"
+                          type="password"
+                          id="password"
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          required
-                          fullWidth
-                          name="profession"
-                          label="Profession"
-                          id="profession"
-                          autoComplete="profession"
-                          onChange={inputHandler}
-                        />
-                      </Grid>
+                      <Grid item xs={12} sx={{ visibility: "hidden" }}></Grid>
                     </Grid>
                   </React.Fragment>
                 )}
@@ -339,7 +390,7 @@ export default function SignUp() {
 											</Grid>
 										</React.Fragment>
 									)} */}
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 4 }}>
                   <Button
                     color="inherit"
                     disabled={activeStep === 0}
@@ -350,25 +401,28 @@ export default function SignUp() {
                   </Button>
                   <Box sx={{ flex: "1 1 auto" }} />
 
-                  <Button onClick={handleNext}>
-                    {activeStep === steps.length - 1 ? "Done" : "Next"}
-                  </Button>
+                  {activeStep === steps.length - 1 ? (
+                    <Button onClick={handleNext} variant="contained">
+                      Create Account
+                    </Button>
+                  ) : (
+                    <Button onClick={handleNext}>Next</Button>
+                  )}
                 </Box>
               </React.Fragment>
             </Box>
-
-            <Grid
-              container
-              justifyContent="center"
-              mt="2rem"
-              sx={{ cursor: "pointer", ":hover": { color: "#2962ff" } }}
-            >
-              <Grid item>
+            {activeStep == 0 && (
+              <Grid
+                container
+                justifyContent="center"
+                mt="2rem"
+                sx={{ cursor: "pointer", ":hover": { color: "#2962ff" } }}
+              >
                 <Box onClick={navigateToSignIn}>
                   Already have an account? Sign in
                 </Box>
               </Grid>
-            </Grid>
+            )}
           </Box>
         </Box>
       </Container>

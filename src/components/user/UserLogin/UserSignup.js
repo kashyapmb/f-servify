@@ -124,8 +124,6 @@ export default function UserSignup() {
   const inputHandler = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
-    console.log(formData);
   };
   const OTPinputHandler = (e) => {
     let str = e.target.value;

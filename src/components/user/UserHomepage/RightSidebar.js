@@ -15,8 +15,8 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { cities } from "../data/cities";
-import { services } from "../data/services";
+import { services } from "../../../data/services";
+import { cities } from "../../../data/cities";
 
 import { MdHome } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
@@ -37,14 +37,14 @@ function MainArea(props) {
     console.log(city);
   };
 
-  const selectedService = (selectedservice) => {
+  const selectedService = (option) => {
     if (city == "") {
       alert("First of all select city");
       return;
     }
-    console.log(selectedservice);
+    console.log(option);
 
-    navigate(`/user/${city.toLowerCase()}/${selectedservice.toLowerCase()}`);
+    navigate(`/user/${city.toLowerCase()}/${option.domain.toLowerCase()}`);
   };
 
   const deleteToken = () => {
@@ -53,7 +53,7 @@ function MainArea(props) {
   };
 
   const navigatetoUserProfile = () => {
-    navigate("/user/profile");
+    navigate(`/user/profile/${user.userId}`);
   };
 
   function stringToColor(string) {
@@ -192,9 +192,15 @@ function MainArea(props) {
                   alignItems: "center",
                   cursor: "pointer",
                 }}
-                onClick={() => selectedService(option.value)}
+                onClick={() => selectedService(option)}
               >
-                <img src="images/typeuser.png" style={{ width: "5rem" }} />
+                <img
+                  src={`images/services/${option.img}`}
+                  style={{
+                    width: "5rem",
+                    // mixBlendMode: "multiply",
+                  }}
+                />
                 <Box sx={{ textAlign: "center", margin: "0.5rem" }}>
                   {option.value}
                 </Box>
@@ -332,11 +338,11 @@ function MainArea(props) {
                     </Box>
                   </Box>
                 </CardContent>
-                </Card>
-              ))}
-            </Box>
+              </Card>
+            ))}
           </Box>
         </Box>
+      </Box>
     </>
   );
 }

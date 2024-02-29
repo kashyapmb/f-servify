@@ -37,7 +37,7 @@ const defaultTheme = createTheme()
 export default function Login() {
 	const navigate = useNavigate()
 	const navigateToSignUp = () => [navigate("/providersignup")]
-	const navigateToProviderHomePage = () => [navigate("/providerhome")]
+	const navigateToProviderHomePage = () => [navigate("/serviceprovider")]
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()

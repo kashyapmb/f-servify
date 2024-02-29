@@ -17,7 +17,7 @@ function UserHome() {
     if (city == "") {
       setCity(localStorage.getItem("servifyCityName") || "");
     }
-
+  
     if (localStorage.getItem("token")) {
       axios
         .get("http://localhost:8000/api/user/details", {
