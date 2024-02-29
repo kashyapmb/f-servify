@@ -44,10 +44,8 @@ export default function SignUp() {
   const [formData, setFormData] = useState(dataObj);
 
   const navigate = useNavigate();
-  const navigateToSignIn = () => [navigate("/providerlogin")];
-  const navigateToServiceProviderHomePage = () => [
-    navigate("/serviceprovider"),
-  ];
+  const navigateToSignIn = () => [navigate("/provider/login")];
+  const navigateToServiceProviderHomePage = () => [navigate("/provider")];
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
@@ -57,13 +55,11 @@ export default function SignUp() {
   const emailInputHandler = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value.toLowerCase() });
-    console.log(formData);
   };
   const ageInputHandler = (e) => {
     const { name, value } = e.target;
     if (/^\d{0,2}$/.test(value) && /^[0-9]*$/.test(value))
       setFormData({ ...formData, [name]: Number(value) });
-    console.log(formData);
   };
   const validEmail = async (email) => {
     if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
@@ -99,12 +95,6 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // setFormData({ ...formData, profilePhoto: uploadedImage })
-
-    // console.log(uploadedImage)
-    // console.log(formData)
-    // console.log(JSON.stringify(formData))
-
     try {
       const response = await axios.post(
         "http://localhost:8000/api/provider/create",
@@ -131,7 +121,7 @@ export default function SignUp() {
       ) {
         if (await validEmail(formData.email)) {
           if (await emailExist(formData.email)) {
-            if (formData.password >= 6) {
+            if (formData.password.length >= 6) {
               if (formData.password == formData.cpassword) {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1);
               } else {
@@ -173,12 +163,6 @@ export default function SignUp() {
   const [activeStep, setActiveStep] = React.useState(0);
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  // temporary
-  const [age, setAge] = React.useState("");
-  const handleChange = (event) => {
-    setAge(event.target.value);
   };
 
   return (
