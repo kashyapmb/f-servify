@@ -38,13 +38,13 @@ function App() {
           <Route path="/user/:city/:servicename" element={<ServiceDetails />} />
           <Route path="/user/:city/:servicename/:id" element={<SPDetails />} />
 
-          <Route path="/serviceprovider" element={<ProviderHome />} />
-          <Route path="/providerlogin" element={<Login />} />
-          <Route path="/providerlogin/forget" element={<EmailTaken />} />
-          <Route path="/providerlogin/otpverify" element={<VerifyOTP />} />
-          <Route path="/providerlogin/resetpass" element={<PasswordReset />} />
-          <Route path="/providerlogin/recovered" element={<Recovered />} />
-          <Route path="/providersignup" element={<Signup />} />
+          <Route path="/provider" element={<ProviderHome />} />
+          <Route path="/provider/login" element={<Login />} />
+          <Route path="/provider/signup" element={<Signup />} />
+          <Route path="/provider/forget" element={<EmailTaken />} />
+          <Route path="/provider/otpverify" element={<VerifyOTP />} />
+          <Route path="/provider/resetpass" element={<PasswordReset />} />
+          <Route path="/provider/recovered" element={<Recovered />} />
 
           <Route path="/mobile" element={<MobileOTP />} />
           <Route path="*" element={<PageNotFound />} />

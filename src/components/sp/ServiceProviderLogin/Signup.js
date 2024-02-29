@@ -54,11 +54,38 @@ export default function SignUp() {
     setFormData({ ...formData, [name]: value });
     console.log(formData);
   };
+  const emailInputHandler = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value.toLowerCase() });
+    console.log(formData);
+  };
   const ageInputHandler = (e) => {
     const { name, value } = e.target;
-    if (/^\d{0,2}$/.test(value)) {
-      setFormData({ ...formData, [name]: value });
+    if (/^\d{0,2}$/.test(value) && /^[0-9]*$/.test(value))
+      setFormData({ ...formData, [name]: Number(value) });
+    console.log(formData);
+  };
+  const validEmail = async (email) => {
+    if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      return true;
     }
+    return false;
+  };
+  const emailExist = async (email) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/provider/search/${email}`
+      );
+      return false;
+    } catch (error) {
+      return true;
+    }
+  };
+  const validMobile = (mobile) => {
+    if (/^\d{10}$/.test(mobile)) {
+      return true;
+    }
+    return false;
   };
   const professionInputHandler = (e) => {
     const { name, value } = e.target;
@@ -91,34 +118,52 @@ export default function SignUp() {
     }
   };
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     if (activeStep === 0) {
-      // if (
-      //   formData.fname &&
-      //   formData.lname &&
-      //   formData.mobile &&
-      //   formData.email &&
-      //   formData.password &&
-      //   formData.cpassword
-      // ) {
-      if (formData.password == formData.cpassword) {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      if (
+        formData.fname &&
+        formData.lname &&
+        formData.age &&
+        formData.gender &&
+        formData.email &&
+        formData.password &&
+        formData.cpassword
+      ) {
+        if (await validEmail(formData.email)) {
+          if (await emailExist(formData.email)) {
+            if (formData.password >= 6) {
+              if (formData.password == formData.cpassword) {
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+              } else {
+                alert("Password and C. Password should be same");
+              }
+            } else {
+              alert("Password should be greter than or equal to 6 character");
+            }
+          } else {
+            alert("Enter another email...this email already has been used");
+          }
+        } else {
+          alert("Enter valid Email Address");
+        }
       } else {
-        alert("Password and C. Password should be same");
+        alert("Enter all the information");
       }
-      // } else {
-      //   alert("Enter all the information");
-      // }
     }
     if (activeStep === 1) {
       if (
-        formData.age &&
-        formData.city &&
-        formData.address &&
-        formData.profession
+        formData.mobile &&
+        formData.profession &&
+        formData.location &&
+        formData.city
       ) {
-        handleSubmit(e);
-        navigateToServiceProviderHomePage();
+        if (validMobile(formData.mobile)) {
+          await handleSubmit(e);
+          alert("Account succesfully created");
+          navigateToServiceProviderHomePage();
+        } else {
+          alert("Enter valid mobile number");
+        }
       } else {
         alert("Enter all the information");
       }
@@ -229,7 +274,7 @@ export default function SignUp() {
                           fullWidth
                           name="age"
                           label="Age"
-                          type="text"
+                          type="number"
                           onChange={ageInputHandler}
                           value={formData.age}
                         />
@@ -263,7 +308,7 @@ export default function SignUp() {
                           name="email"
                           autoComplete="email"
                           value={formData.email}
-                          onChange={inputHandler}
+                          onChange={emailInputHandler}
                         />
                       </Grid>
                       <Grid item xs={12}>

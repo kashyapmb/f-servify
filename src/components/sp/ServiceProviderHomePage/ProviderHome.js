@@ -31,7 +31,7 @@ function ProviderHome() {
           console.error("Error fetching user details:", error);
         });
     } else {
-      navigate("/providerlogin");
+      navigate("/provider/login");
     }
   }, []);
 

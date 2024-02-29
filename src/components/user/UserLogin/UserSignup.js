@@ -127,10 +127,13 @@ export default function UserSignup() {
   };
   const OTPinputHandler = (e) => {
     let str = e.target.value;
-    console.log(str);
     if (/^\d{0,4}$/.test(str)) {
       setOTPinput(str);
     }
+  };
+  const emailInputHandler = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value.toLowerCase() });
   };
 
   const handleSubmit = async (event) => {
@@ -168,7 +171,7 @@ export default function UserSignup() {
 
   function isValidEmail(e) {
     // Regular expression for validating email addresses
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return regex.test(e);
   }
   const emailExist = async (e) => {
@@ -349,7 +352,7 @@ export default function UserSignup() {
                           name="mobile"
                           autoComplete="mobile"
                           value={formData.mobile}
-                          onChange={inputHandler}
+                          onChange={emailInputHandler}
                         />
                       </Grid>
                       <Grid item xs={12}>

@@ -8,7 +8,7 @@ function UserType() {
     navigate("/user");
   };
   const navigateProviderLogin = () => {
-    navigate("/providerlogin");
+    navigate("/provider/login");
   };
   return (
     <>
