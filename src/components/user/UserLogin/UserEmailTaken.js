@@ -16,24 +16,22 @@ import axios from "axios";
 import { useState } from "react";
 import { createContext } from "react";
 function UserEmailTaken() {
-  const OtpContext = createContext();
-
-  const [email, setEmail] = useState("");
-  const inputHandler = (e) => {
-    setEmail(e.target.value);
-  };
-
   const navigate = useNavigate();
 
-  function isValidEmail(e) {
-    // Regular expression for validating email addresses
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(e);
-  }
-  const emailExist = async (e) => {
+  const [email, setEmail] = useState();
+  const emailInputHandler = (e) => {
+    setEmail(e.target.value.toLowerCase());
+  };
+  const validEmail = async (email) => {
+    if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      return true;
+    }
+    return false;
+  };
+  const emailExist = async (email) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/user/search/${e}`
+        `http://localhost:8000/api/provider/search/${email}`
       );
       return true;
     } catch (error) {
@@ -43,28 +41,30 @@ function UserEmailTaken() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isValidEmail(email)) {
-      if (await emailExist(email)) {
-        const OTP = Math.floor(Math.random() * 9000 + 1000);
+    if (email) {
+      if (await validEmail(email)) {
+        if (await emailExist(email)) {
+          const OTP = Math.floor(Math.random() * 9000 + 1000);
 
-        console.log(OTP);
-        console.log(email);
-        axios
-          .post("http://localhost:8000/send_recovery_email", {
-            OTP,
-            recipient_email: email,
-          })
-          .then(() =>
-            navigate("/user/otpverify", {
-              state: { otp: OTP, email: email },
+          axios
+            .post("http://localhost:8000/send_recovery_email", {
+              OTP,
+              recipient_email: email,
             })
-          )
-          .catch(console.log);
+            .then(() =>
+              navigate("/user/otpverify", {
+                state: { otp: OTP, email: email },
+              })
+            )
+            .catch(console.log);
+        } else {
+          alert("Email not exist in our database");
+        }
       } else {
-        alert("Email not exist in our database");
+        alert("Enter correct Email Address");
       }
     } else {
-      alert("Enter valid email");
+      alert("Enter your email address");
     }
   };
   return (
@@ -105,13 +105,9 @@ function UserEmailTaken() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={inputHandler}
+              value={email}
+              onChange={emailInputHandler}
             />
-
-            {/* <FormControlLabel
-							control={<Checkbox value="remember" color="primary" />}
-							label="Remember me"
-						/> */}
 
             <Button
               type="submit"
@@ -123,7 +119,6 @@ function UserEmailTaken() {
             </Button>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </>
   );

@@ -48,7 +48,7 @@ function MainArea(props) {
   };
 
   const deleteToken = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("providerToken");
     window.location.reload();
   };
 

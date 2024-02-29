@@ -23,26 +23,6 @@ import StepLabel from "@mui/material/StepLabel";
 
 const steps = ["Personal Information", "Verify Email Address"];
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-const defaultTheme = createTheme();
-
 export default function UserSignup() {
   const dataObj = {
     fname: "",
@@ -51,9 +31,6 @@ export default function UserSignup() {
     email: "",
     password: "",
     cpassword: "",
-    verified: false,
-    actualrating: 0,
-    completedwork: 0,
   };
 
   const [formData, setFormData] = useState(dataObj);
@@ -61,7 +38,6 @@ export default function UserSignup() {
   const [OTPinput, setOTPinput] = useState("");
   const [disable, setDisable] = useState(true);
   const [timerCount, setTimer] = React.useState(60);
-  const [email, setEmail] = useState("");
 
   React.useEffect(() => {
     let interval = setInterval(() => {
@@ -81,7 +57,7 @@ export default function UserSignup() {
     const OTP = Math.floor(Math.random() * 9000 + 1000);
     setOTP(OTP);
 
-    axios
+    await axios
       .post("http://localhost:8000/send_recovery_email", {
         OTP,
         recipient_email: formData.email,
@@ -89,33 +65,35 @@ export default function UserSignup() {
       .catch(console.log);
   };
 
-  function resendOTP() {
+  const resendOTP = async () => {
     if (disable) return;
     const OTP = Math.floor(Math.random() * 9000 + 1000);
-    setOTP(OTP);
-    axios
+    await axios
       .post("http://localhost:8000/send_recovery_email", {
         OTP,
         recipient_email: formData.email,
       })
+      .then(() => setOTP(OTP))
       .then(() => setDisable(true))
       .then(() => alert("A new OTP has succesfully been sent to your email."))
       .then(() => setTimer(60))
       .catch(console.log);
-  }
+  };
 
   const verfiyOTP = async (e) => {
+    e.preventDefault()
     try {
       if (OTPinput == otp) {
+        console.log("Called");
         await handleSubmit(e);
+        alert("Account created succesfully");
         navigate("/user");
-        alert("Account Created succesfully");
         return;
+      } else {
+        alert(
+          "The code you have entered is not correct, try again or re-send the link"
+        );
       }
-      alert(
-        "The code you have entered is not correct, try again or re-send the link"
-      );
-      return;
     } catch (error) {
       console.log(error);
     }
@@ -136,14 +114,14 @@ export default function UserSignup() {
     setFormData({ ...formData, [name]: value.toLowerCase() });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:8000/api/user/create",
         formData
       );
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userToken", response.data.token);
     } catch (error) {
       toast.error("An error occurred. Please try again.");
       console.error("Signup Error:", error);
@@ -169,11 +147,10 @@ export default function UserSignup() {
     }
   };
 
-  function isValidEmail(e) {
-    // Regular expression for validating email addresses
+  const isValidEmail = async (e) => {
     const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return regex.test(e);
-  }
+  };
   const emailExist = async (e) => {
     try {
       const response = await axios.get(
@@ -183,6 +160,13 @@ export default function UserSignup() {
     } catch (error) {
       return true;
     }
+  };
+
+  const validMobile = async (mobile) => {
+    if (/^\d{10}$/.test(mobile)) {
+      return true;
+    }
+    return false;
   };
 
   const handleNext = async (e) => {
@@ -195,24 +179,30 @@ export default function UserSignup() {
         formData.password &&
         formData.cpassword
       ) {
-        if (isValidEmail(formData.email)) {
-          if (await emailExist(formData.email)) {
-            if (formData.password.length >= 6) {
-              if (formData.password == formData.cpassword) {
-                sendOTPtogivenEmail(e);
-                setTimer(60);
-                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        if (await validMobile(formData.mobile)) {
+          if (await isValidEmail(formData.email)) {
+            if (await emailExist(formData.email)) {
+              if (formData.password.length >= 6) {
+                if (formData.password == formData.cpassword) {
+                  await sendOTPtogivenEmail(e);
+                  setTimer(60);
+                  setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                } else {
+                  alert("Password and C. Password should be same");
+                }
               } else {
-                alert("Password and C. Password should be same");
+                alert(
+                  "Password should be greater than or equal to 6 character"
+                );
               }
             } else {
-              alert("Password should be greater than or equal to 6 character");
+              alert("Email exist in our database...try with new email address");
             }
           } else {
-            alert("Email exist in our database...try with new email address");
+            alert("Enter valid email");
           }
         } else {
-          alert("Enter valid email");
+          alert("Enter valid mobile  number");
         }
       } else {
         alert("Enter all the information");
@@ -237,7 +227,6 @@ export default function UserSignup() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
             sx={{
               mt: 3,
               display: "flex",
@@ -288,36 +277,6 @@ export default function UserSignup() {
                 {activeStep === 0 && (
                   <React.Fragment>
                     <Grid container spacing={2}>
-                      {/* <Grid item xs={12}>
-													<Box
-														sx={{
-															px: "1rem",
-															py: "0.6rem",
-															display: "flex",
-															background: "#fff",
-															border: "1px solid black",
-															color: "black",
-															fontWeight: "600",
-															fontSize: "1rem",
-															borderRadius: "0.3rem",
-															":hover": {
-																color: "white",
-																background: "#5f6160",
-																transition: "0.3s",
-																cursor: "pointer",
-															},
-														}}
-														onClick={handleClick}
-													>
-														Upload a Profile Photo *
-													</Box>
-													<input
-														type="file"
-														onChange={handleChange}
-														ref={hiddenFileInput}
-														style={{ display: "none" }} // Make the file input element invisible
-													/>
-												</Grid> */}
                       <Grid item xs={12} sm={6}>
                         <TextField
                           autoComplete="given-name"
@@ -352,7 +311,7 @@ export default function UserSignup() {
                           name="mobile"
                           autoComplete="mobile"
                           value={formData.mobile}
-                          onChange={emailInputHandler}
+                          onChange={inputHandler}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -364,7 +323,7 @@ export default function UserSignup() {
                           name="email"
                           autoComplete="email"
                           value={formData.email}
-                          onChange={inputHandler}
+                          onChange={emailInputHandler}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -473,7 +432,7 @@ export default function UserSignup() {
                       variant="contained"
                       onClick={verfiyOTP}
                     >
-                      Verify account
+                      Create account
                     </Button>
                   ) : (
                     <Button onClick={handleNext} variant="contained">

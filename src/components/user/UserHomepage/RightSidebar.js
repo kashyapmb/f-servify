@@ -48,7 +48,7 @@ function MainArea(props) {
   };
 
   const deleteToken = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("userToken");
     window.location.reload();
   };
 
@@ -88,7 +88,7 @@ function MainArea(props) {
       <Box
         sx={{
           background: "#ffffff",
-          borderRadius: "3rem",
+          borderRadius: "1rem",
           padding: "3rem 3rem",
           margin: "1rem",
           border: "1px solid black",

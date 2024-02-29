@@ -19,7 +19,6 @@ import { useState } from "react";
 
 function UserPasswordReset() {
   const dataObj = {
-    email: "",
     password: "",
     cpassword: "",
   };
@@ -28,7 +27,6 @@ function UserPasswordReset() {
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
-    // console.log(name)
     setFormData({ ...formData, [name]: value });
   };
 
@@ -37,19 +35,21 @@ function UserPasswordReset() {
   useEffect(() => {
     setEmail(location.state.email);
   }, []);
+
   const navigate = useNavigate();
-  function changePassword() {
+  const changePassword = (e) => {
+    // e.preventDefault();
     if (formData.password === "") {
       alert("Enter your new password");
       return;
     } else if (formData.cpassword === "") {
       alert("Enter your confirm password");
       return;
-    } else if (formData.password != formData.cpassword) {
-      alert("Both password and confirm password should be same");
-      return;
     } else if (formData.password.length < 6) {
       alert("Password should be greater than or equal to 6 characters");
+      return;
+    } else if (formData.password != formData.cpassword) {
+      alert("Both password and confirm password should be same");
       return;
     } else {
       let newPassword = formData.password;
@@ -58,10 +58,12 @@ function UserPasswordReset() {
           email,
           newPassword,
         })
-        .then(() => navigate("/providerlogin/recovered"))
+        .then(() => alert("New Password set succesfully"))
+        .then(() => navigate("/user/login"))
         .catch(console.log);
     }
-  }
+  };
+
   return (
     <>
       <Container component="main" maxWidth="xs">

@@ -42,7 +42,7 @@ function RightSidebar() {
       <Box
         sx={{
           background: "#ffffff",
-          borderRadius: "3rem",
+          borderRadius: "1rem",
           padding: "3rem 3rem",
           margin: "1rem",
           border: "1px solid black",

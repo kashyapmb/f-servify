@@ -25,7 +25,7 @@ function LeftSidebar() {
       sx={{
         pt: "3rem",
         height: "80vh",
-        borderRadius: "3rem",
+        borderRadius: "1rem",
         margin: "1rem",
 
         /* From https://css.glass */

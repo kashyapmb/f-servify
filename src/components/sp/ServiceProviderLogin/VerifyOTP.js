@@ -78,7 +78,6 @@ function VerifyOTP() {
     if (location.state) {
       setOTP(location.state.otp);
       setEmail(location.state.email);
-      console.log("First");
     }
   }, []);
 

@@ -17,10 +17,9 @@ import axios from "axios";
 
 function UserVerifyOTP() {
   const navigate = useNavigate();
-  const [ct, setCT] = useState(0);
 
-  const location = useLocation();
-  const { otp, email } = location.state || {};
+  const [otp, setOTP] = useState(null);
+  const [email, setEmail] = useState("");
 
   const [timerCount, setTimer] = React.useState(60);
   const [OTPinput, setOTPinput] = useState("");
@@ -28,31 +27,32 @@ function UserVerifyOTP() {
 
   function resendOTP() {
     if (disable) return;
+
+    const new_OTP = Math.floor(Math.random() * 9000 + 1000);
     axios
       .post("http://localhost:8000/send_recovery_email", {
-        OTP: otp,
+        OTP: new_OTP,
         recipient_email: email,
       })
-      .then(() => setDisable(true))
-      .then(() => alert("A new OTP has succesfully been sent to your email."))
-      .then(() => setTimer(60))
+      .then(() => {
+        setOTP(new_OTP);
+        setDisable(true);
+        alert("A new OTP has succesfully been sent to your email.");
+        setTimer(60);
+      })
       .catch(console.log);
   }
 
-  function verfiyOTP(e) {
+  const verfiyOTP = (e) => {
     e.preventDefault();
     if (OTPinput == otp) {
       navigate("/user/resetpass", { state: { email: email } });
-    } else if (ct === 3) {
-      navigate("/user/forget");
-      alert("u have entered wrong otp more than 3 times");
     } else {
       alert(
         "The code you have entered is not correct, try again or re-send the link"
       );
-      setCT(ct + 1);
     }
-  }
+  };
 
   const inputHandler = (e) => {
     let str = e.target.value;
@@ -61,6 +61,7 @@ function UserVerifyOTP() {
     }
   };
 
+  const location = useLocation();
   React.useEffect(() => {
     let interval = setInterval(() => {
       setTimer((lastTimerCount) => {
@@ -69,10 +70,16 @@ function UserVerifyOTP() {
         if (lastTimerCount <= 0) return lastTimerCount;
         return lastTimerCount - 1;
       });
-    }, 1000); //each count lasts for a second
-    //cleanup the interval on complete
+    }, 1000);
     return () => clearInterval(interval);
   }, [disable]);
+
+  React.useEffect(() => {
+    if (location.state) {
+      setOTP(location.state.otp);
+      setEmail(location.state.email);
+    }
+  }, []);
 
   return (
     <>

@@ -16,11 +16,11 @@ function ProviderHome() {
   useEffect(() => {
     console.log("Called");
 
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("providerToken")) {
       axios
         .get("http://localhost:8000/api/user/details", {
           headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: "Bearer " + localStorage.getItem("providerToken"),
           },
         })
         .then((response) => {

@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useEffect } from "react";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
 
@@ -21,38 +22,64 @@ export default function UserLogin() {
   const navigate = useNavigate();
   const navigateToSignUp = () => [navigate("/user/signup")];
   const navigateToUserHomePage = () => [navigate("/user")];
+  const navigateToEmailTaken = () => [navigate("/user/forget")];
+
+  const [email, setEmail] = useState();
+  const emailInputHandler = (e) => {
+    setEmail(e.target.value.toLowerCase());
+  };
+  const validEmail = async (email) => {
+    if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      return true;
+    }
+    return false;
+  };
+  const emailExist = async (email) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/user/search/${email}`
+      );
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    let email = data.get("email");
     let password = data.get("password");
-    console.log(email);
-    console.log(password);
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/user/login",
-        {
-          email,
-          password,
+    if (email && password) {
+      if (await validEmail(email)) {
+        if (await emailExist(email)) {
+          try {
+            const response = await axios.post(
+              "http://localhost:8000/api/user/login",
+              {
+                email,
+                password,
+              }
+            );
+            const token = response.data.token;
+            localStorage.setItem("userToken", token);
+            navigateToUserHomePage();
+          } catch (error) {
+            alert("Invalid email or Password");
+            console.error(error);
+          }
+        } else {
+          alert("Email not exist in our databse");
         }
-      );
-      console.log(response);
-      const token = response.data.token;
-      localStorage.setItem("token", token);
-      navigateToUserHomePage();
-    } catch (error) {
-      alert(error.response.data.error);
-      console.error(error);
+      } else {
+        alert("Enter valid Email Address");
+      }
+    } else {
+      alert("Enter all information");
     }
   };
 
-  function nagigateToEmailTaken() {
-    navigate("/user/forget");
-  }
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("userToken");
     if (token) navigateToUserHomePage();
   });
 
@@ -89,6 +116,8 @@ export default function UserLogin() {
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
+              onChange={emailInputHandler}
             />
             <TextField
               margin="normal"
@@ -100,11 +129,6 @@ export default function UserLogin() {
               id="password"
               autoComplete="current-password"
             />
-
-            {/* <FormControlLabel
-							control={<Checkbox value="remember" color="primary" />}
-							label="Remember me"
-						/> */}
 
             <Button
               type="submit"
@@ -124,7 +148,7 @@ export default function UserLogin() {
                     mb: "3rem",
                   }}
                   variant="body2"
-                  onClick={nagigateToEmailTaken}
+                  onClick={navigateToEmailTaken}
                 >
                   Forgot password?
                 </Box>
@@ -146,7 +170,6 @@ export default function UserLogin() {
             </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );

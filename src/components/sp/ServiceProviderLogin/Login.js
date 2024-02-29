@@ -54,7 +54,7 @@ export default function Login() {
               }
             );
             const token = response.data.token;
-            localStorage.setItem("token", token);
+            localStorage.setItem("providerToken", token);
             navigateToProviderHomePage();
           } catch (error) {
             alert("Invalid email or Password");
@@ -167,7 +167,6 @@ export default function Login() {
             </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );

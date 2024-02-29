@@ -18,11 +18,11 @@ function UserHome() {
       setCity(localStorage.getItem("servifyCityName") || "");
     }
   
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("userToken")) {
       axios
         .get("http://localhost:8000/api/user/details", {
           headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: "Bearer " + localStorage.getItem("userToken"),
           },
         })
         .then((response) => {

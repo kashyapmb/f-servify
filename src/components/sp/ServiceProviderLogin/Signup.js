@@ -77,7 +77,7 @@ export default function SignUp() {
       return true;
     }
   };
-  const validMobile = (mobile) => {
+  const validMobile = async (mobile) => {
     if (/^\d{10}$/.test(mobile)) {
       return true;
     }
@@ -100,7 +100,7 @@ export default function SignUp() {
         "http://localhost:8000/api/provider/create",
         formData
       );
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("providerToken", response.data.token);
       toast.success(response.data.msg);
     } catch (error) {
       toast.error("An error occurred. Please try again.");
@@ -109,6 +109,7 @@ export default function SignUp() {
   };
 
   const handleNext = async (e) => {
+    e.preventDefault()
     if (activeStep === 0) {
       if (
         formData.fname &&
@@ -147,7 +148,7 @@ export default function SignUp() {
         formData.location &&
         formData.city
       ) {
-        if (validMobile(formData.mobile)) {
+        if (await validMobile(formData.mobile)) {
           await handleSubmit(e);
           alert("Account succesfully created");
           navigateToServiceProviderHomePage();
@@ -178,7 +179,6 @@ export default function SignUp() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
             sx={{
               mt: 3,
               display: "flex",
