@@ -21,7 +21,7 @@ import UserVerifyOTP from "./components/user/UserLogin/UserVerifyOTP";
 import UserPasswordReset from "./components/user/UserLogin/UserPasswordReset";
 import UserProfile from "./components/user/UserProfile";
 import MobileOTP from "./components/MobileOTP";
-import SPDetails from "./components/user/SPDetails";
+import SPDetails from "./components/user/ProviderDetails/SPDetails";
 function App() {
   return (
     <>

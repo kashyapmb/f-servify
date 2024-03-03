@@ -17,26 +17,55 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { MdHome, MdVerified } from "react-icons/md";
+import { MdError, MdHome, MdVerified } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { MdOutlineReviews } from "react-icons/md";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
+import axios from "axios";
 
 function RightSidebar() {
   const [domain, setDomain] = useState();
+  const [city, setCity] = useState();
+  const [providerData, setProviderData] = useState([]);
+
+  const getProviderData = async () => {
+    console.log(city);
+    console.log(domain);
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/provider/getProviders",
+        {
+          city,
+          domain,
+        }
+      );
+      console.log(response.data);
+      setProviderData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     // fetch domain from  url
     const currentURL = window.location.href;
     const parts = currentURL.split("/");
     setDomain(parts[parts.length - 1]);
+    setCity(localStorage.getItem("servifyCityName"));
+
+    const fetchData = async () => {
+      await getProviderData();
+    };
+    fetchData();
   });
+
   const navigate = useNavigate();
-  const clickedServiceProvider = () => {
-    const city = localStorage.getItem("servifyCityName");
-    navigate(`/user/${city.toLowerCase()}/${domain}/uuu298382383u29`);
+  const clickedServiceProvider = (obj) => {
+    navigate(`/user/${city.toLowerCase()}/${domain}/${obj._id}`);
   };
+
   return (
     <>
       <Box
@@ -59,7 +88,9 @@ function RightSidebar() {
         >
           <Box sx={{ display: "flex" }}>
             Search found : &nbsp;
-            <Box sx={{ fontWeight: "600" }}>5 providers</Box>
+            <Box sx={{ fontWeight: "600" }}>
+              {providerData.length} providers
+            </Box>
           </Box>
           <Box>
             Sort by : <Select sx={{ height: "2rem" }} />
@@ -70,481 +101,128 @@ function RightSidebar() {
         <Box
           sx={{ mt: "1rem", display: "flex", flexWrap: "wrap", gap: "1rem" }}
         >
-          <Box
-            sx={{
-              padding: "1rem",
-              width: "40%",
-              border: "1px solid black",
-              borderRadius: "1rem",
-              cursor: "pointer",
-              transition: "0.5s",
-              ":hover": {
-                boxShadow: "5px 5px 5px",
-              },
-            }}
-            onClick={clickedServiceProvider}
-          >
-            {/* img, name and profession  */}
-            <Box sx={{ display: "flex" }}>
-              <Box>
-                <img
-                  src="https://xsgames.co/randomusers/assets/avatars/male/1.jpg"
-                  style={{
-                    width: "6rem",
-                    borderRight: "1px solid black",
+          {providerData &&
+            providerData.map((obj, index) => {
+              return (
+                <Box
+                  sx={{
+                    padding: "1rem",
+                    width: "40%",
+                    border: "1px solid black",
                     borderRadius: "1rem",
+                    cursor: "pointer",
+                    transition: "0.5s",
+                    ":hover": {
+                      boxShadow: "5px 5px 5px",
+                    },
                   }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  margin: "0 1rem",
-                  mt: "1rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.3rem",
-                }}
-              >
-                <Box sx={{ fontSize: "1.1rem" }}>Kashyap Bavadiya</Box>
-                <Box sx={{ fontWeight: "600" }}>Teacher</Box>
-              </Box>
-            </Box>
-            {/* location  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ fontWeight: "600" }}>Mota vrachha</Box>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Phone Verified : &nbsp; <MdVerified color="blue" />
-                </Box>
-              </Box>
-            </Box>
-            {/* rating ,  job and  reviewsct  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Rating</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
+                  onClick={() => clickedServiceProvider(obj)}
                 >
-                  <FaStar color="#fee701" size={13} />
-                  4.5
+                  {/* img, name and profession  */}
+                  <Box sx={{ display: "flex" }}>
+                    <Box>
+                      {obj.gender == "Male" ? (
+                        <img
+                          src="https://xsgames.co/randomusers/assets/avatars/male/1.jpg"
+                          style={{
+                            width: "6rem",
+                            borderRadius: "1rem",
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src="https://xsgames.co/randomusers/assets/avatars/female/1.jpg"
+                          style={{
+                            width: "6rem",
+                            borderRadius: "1rem",
+                          }}
+                        />
+                      )}
+                    </Box>
+                    <Box
+                      sx={{
+                        margin: "0 1rem",
+                        mt: "1rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.3rem",
+                      }}
+                    >
+                      <Box sx={{ fontSize: "1.1rem" }}>
+                        {obj.fname} {obj.lname}
+                      </Box>
+                      <Box sx={{ fontWeight: "600" }}>{obj.profession}</Box>
+                    </Box>
+                  </Box>
+                  {/* location  */}
+                  <Box sx={{ display: "flex", gap: "2rem" }}>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <Box sx={{ fontWeight: "600" }}>{obj.location}</Box>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        Phone Verified : &nbsp;{" "}
+                        {obj.mobileverified ? (
+                          <MdVerified color="blue" />
+                        ) : (
+                          <MdError color="red" size={20} />
+                        )}
+                      </Box>
+                    </Box>
+                  </Box>
+                  {/* rating ,  job and  reviewsct  */}
+                  <Box sx={{ display: "flex", gap: "2rem" }}>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <Box sx={{ opacity: "0.7" }}>Rating</Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          fontWeight: "600",
+                          fontSize: "0.9rem",
+                          gap: "0.3rem",
+                        }}
+                      >
+                        <FaStar color="#fee701" size={13} />
+                        4.5
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box sx={{ opacity: "0.7" }}>Completed work</Box>
+                      <Box
+                        sx={{
+                          ml: "0.3rem",
+                          alignItems: "center",
+                          fontWeight: "600",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        {obj.completed_work}
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <Box sx={{ opacity: "0.7" }}>Reviews</Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          fontWeight: "600",
+                          fontSize: "0.9rem",
+                          gap: "0.3rem",
+                        }}
+                      >
+                        <MdOutlineReviews color="blue" size={13} />
+                        20
+                      </Box>
+                    </Box>
+                  </Box>
                 </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Jobs</Box>
-                <Box
-                  sx={{
-                    ml: "0.3rem",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  100
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Reviews</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <MdOutlineReviews color="blue" size={13} />
-                  20
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              padding: "1rem",
-              width: "40%",
-              border: "1px solid black",
-              borderRadius: "1rem",
-              cursor: "pointer",
-              transition: "0.5s",
-              ":hover": {
-                boxShadow: "5px 5px 5px",
-              },
-            }}
-            onClick={clickedServiceProvider}
-          >
-            {/* img, name and profession  */}
-            <Box sx={{ display: "flex" }}>
-              <Box>
-                <img
-                  src="https://xsgames.co/randomusers/assets/avatars/male/1.jpg"
-                  style={{
-                    width: "6rem",
-                    borderRight: "1px solid black",
-                    borderRadius: "1rem",
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  margin: "0 1rem",
-                  mt: "1rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.3rem",
-                }}
-              >
-                <Box sx={{ fontSize: "1.1rem" }}>Kashyap Bavadiya</Box>
-                <Box sx={{ fontWeight: "600" }}>Teacher</Box>
-              </Box>
-            </Box>
-            {/* location  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ fontWeight: "600" }}>Mota vrachha</Box>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Phone Verified : &nbsp; <MdVerified color="blue" />
-                </Box>
-              </Box>
-            </Box>
-            {/* rating ,  job and  reviewsct  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Rating</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <FaStar color="#fee701" size={13} />
-                  4.5
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Jobs</Box>
-                <Box
-                  sx={{
-                    ml: "0.3rem",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  100
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Reviews</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <MdOutlineReviews color="blue" size={13} />
-                  20
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              padding: "1rem",
-              width: "40%",
-              border: "1px solid black",
-              borderRadius: "1rem",
-              cursor: "pointer",
-              transition: "0.5s",
-              ":hover": {
-                boxShadow: "5px 5px 5px",
-              },
-            }}
-            onClick={clickedServiceProvider}
-          >
-            {/* img, name and profession  */}
-            <Box sx={{ display: "flex" }}>
-              <Box>
-                <img
-                  src="https://xsgames.co/randomusers/assets/avatars/male/1.jpg"
-                  style={{
-                    width: "6rem",
-                    borderRight: "1px solid black",
-                    borderRadius: "1rem",
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  margin: "0 1rem",
-                  mt: "1rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.3rem",
-                }}
-              >
-                <Box sx={{ fontSize: "1.1rem" }}>Kashyap Bavadiya</Box>
-                <Box sx={{ fontWeight: "600" }}>Teacher</Box>
-              </Box>
-            </Box>
-            {/* location  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ fontWeight: "600" }}>Mota vrachha</Box>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Phone Verified : &nbsp; <MdVerified color="blue" />
-                </Box>
-              </Box>
-            </Box>
-            {/* rating ,  job and  reviewsct  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Rating</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <FaStar color="#fee701" size={13} />
-                  4.5
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Jobs</Box>
-                <Box
-                  sx={{
-                    ml: "0.3rem",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  100
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Reviews</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <MdOutlineReviews color="blue" size={13} />
-                  20
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              padding: "1rem",
-              width: "40%",
-              border: "1px solid black",
-              borderRadius: "1rem",
-              cursor: "pointer",
-              transition: "0.5s",
-              ":hover": {
-                boxShadow: "5px 5px 5px",
-              },
-            }}
-            onClick={clickedServiceProvider}
-          >
-            {/* img, name and profession  */}
-            <Box sx={{ display: "flex" }}>
-              <Box>
-                <img
-                  src="https://xsgames.co/randomusers/assets/avatars/male/1.jpg"
-                  style={{
-                    width: "6rem",
-                    borderRight: "1px solid black",
-                    borderRadius: "1rem",
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  margin: "0 1rem",
-                  mt: "1rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.3rem",
-                }}
-              >
-                <Box sx={{ fontSize: "1.1rem" }}>Kashyap Bavadiya</Box>
-                <Box sx={{ fontWeight: "600" }}>Teacher</Box>
-              </Box>
-            </Box>
-            {/* location  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ fontWeight: "600" }}>Mota vrachha</Box>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Phone Verified : &nbsp; <MdVerified color="blue" />
-                </Box>
-              </Box>
-            </Box>
-            {/* rating ,  job and  reviewsct  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Rating</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <FaStar color="#fee701" size={13} />
-                  4.5
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Jobs</Box>
-                <Box
-                  sx={{
-                    ml: "0.3rem",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  100
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Reviews</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <MdOutlineReviews color="blue" size={13} />
-                  20
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              padding: "1rem",
-              width: "40%",
-              border: "1px solid black",
-              borderRadius: "1rem",
-              cursor: "pointer",
-              transition: "0.5s",
-              ":hover": {
-                boxShadow: "5px 5px 5px",
-              },
-            }}
-            onClick={clickedServiceProvider}
-          >
-            {/* img, name and profession  */}
-            <Box sx={{ display: "flex" }}>
-              <Box>
-                <img
-                  src="https://xsgames.co/randomusers/assets/avatars/male/1.jpg"
-                  style={{
-                    width: "6rem",
-                    borderRight: "1px solid black",
-                    borderRadius: "1rem",
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  margin: "0 1rem",
-                  mt: "1rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.3rem",
-                }}
-              >
-                <Box sx={{ fontSize: "1.1rem" }}>Kashyap Bavadiya</Box>
-                <Box sx={{ fontWeight: "600" }}>Teacher</Box>
-              </Box>
-            </Box>
-            {/* location  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ fontWeight: "600" }}>Mota vrachha</Box>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  Phone Verified : &nbsp; <MdVerified color="blue" />
-                </Box>
-              </Box>
-            </Box>
-            {/* rating ,  job and  reviewsct  */}
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Rating</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <FaStar color="#fee701" size={13} />
-                  4.5
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Jobs</Box>
-                <Box
-                  sx={{
-                    ml: "0.3rem",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  100
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{ opacity: "0.7" }}>Reviews</Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    gap: "0.3rem",
-                  }}
-                >
-                  <MdOutlineReviews color="blue" size={13} />
-                  20
-                </Box>
-              </Box>
-            </Box>
-          </Box>
+              );
+            })}
         </Box>
       </Box>
     </>

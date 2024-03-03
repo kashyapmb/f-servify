@@ -81,7 +81,7 @@ export default function UserSignup() {
   };
 
   const verfiyOTP = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       if (OTPinput == otp) {
         console.log("Called");
@@ -133,19 +133,6 @@ export default function UserSignup() {
 
   //Stepper for sign up
   const [activeStep, setActiveStep] = React.useState(0);
-
-  const emailVerification = async () => {
-    console.log("Email verification starting");
-    let email = formData.email;
-    try {
-      const response = await axios.post("http://localhost:8000/send-email", {
-        email,
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const isValidEmail = async (e) => {
     const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
