@@ -22,6 +22,9 @@ import UserPasswordReset from "./components/user/UserLogin/UserPasswordReset";
 import UserProfile from "./components/user/UserProfile";
 import MobileOTP from "./components/MobileOTP";
 import SPDetails from "./components/user/ProviderDetails/SPDetails";
+import ProviderProfile from "./components/sp/ProviderProfile";
+import FirebaseImageUpload from "./components/firebaseImageupload/FirebaseImageUpload";
+import Favorite from "./components/user/Favorites/Favorite";
 function App() {
   return (
     <>
@@ -34,9 +37,11 @@ function App() {
           <Route path="/user/forget" element={<UserEmailTaken />} />
           <Route path="/user/otpverify" element={<UserVerifyOTP />} />
           <Route path="/user/resetpass" element={<UserPasswordReset />} />
-          <Route path="/user/profile/:id" element={<UserProfile />} />
+          <Route path="/user/profile/:userId" element={<UserProfile />} />
           <Route path="/user/:city/:servicename" element={<ServiceDetails />} />
           <Route path="/user/:city/:servicename/:id" element={<SPDetails />} />
+          <Route path="/user/:city/:servicename/:id" element={<SPDetails />} />
+          <Route path="/user/favorites" element={<Favorite />} />
 
           <Route path="/provider" element={<ProviderHome />} />
           <Route path="/provider/login" element={<Login />} />
@@ -45,8 +50,10 @@ function App() {
           <Route path="/provider/otpverify" element={<VerifyOTP />} />
           <Route path="/provider/resetpass" element={<PasswordReset />} />
           <Route path="/provider/recovered" element={<Recovered />} />
+          <Route path="/provider/profile/:id" element={<ProviderProfile />} />
 
           <Route path="/mobile" element={<MobileOTP />} />
+          <Route path="/firebase" element={<FirebaseImageUpload />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>

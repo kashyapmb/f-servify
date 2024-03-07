@@ -3,8 +3,13 @@ import React from "react";
 import { AiFillHome, AiOutlineHome } from "react-icons/ai";
 import { FaHeart } from "react-icons/fa";
 import { MdCloudDone, MdPersonSearch } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 function LeftSidebar() {
+  const navigate = useNavigate()
+  const gotoFavorites = () => {
+    navigate('/user/favorites')    
+  }
   return (
     <>
       <Box
@@ -35,9 +40,17 @@ function LeftSidebar() {
             </Box>
           </Box>
           <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.7rem",
+                cursor: "pointer",
+              }}
+              onClick={gotoFavorites}
+            >
               <FaHeart />
-              <Box>Favourites</Box>
+              <Box>Favorites</Box>
             </Box>
           </Box>
           <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>

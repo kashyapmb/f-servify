@@ -14,39 +14,42 @@ function ProviderHome() {
   const [user, setUser] = useState();
 
   useEffect(() => {
-    console.log("Called");
-
-    if (localStorage.getItem("providerToken")) {
-      axios
+    const fetchProviderData = async () => {
+      await axios
         .get("http://localhost:8000/api/user/details", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("providerToken"),
           },
         })
         .then((response) => {
-          console.log(response);
           setUser(response.data.user);
         })
         .catch((error) => {
           console.error("Error fetching user details:", error);
         });
+    };
+
+    if (localStorage.getItem("providerToken")) {
+      fetchProviderData();
     } else {
       navigate("/provider/login");
     }
-  }, []);
+  });
 
   return (
     <>
-      <Box sx={{ height: "100%", background: "#f2f2f7", padding: "1rem" }}>
-        <Grid container>
-          <Grid item xs={3}>
-            <LeftSidebar />
+      {user && (
+        <Box sx={{ height: "100%", background: "#f2f2f7", padding: "1rem" }}>
+          <Grid container>
+            <Grid item xs={3}>
+              <LeftSidebar />
+            </Grid>
+            <Grid item xs={8}>
+              <RightSidebar user={user} />
+            </Grid>
           </Grid>
-          <Grid item xs={8}>
-            <RightSidebar user={user} />
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
     </>
   );
 }

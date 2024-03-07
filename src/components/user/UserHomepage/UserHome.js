@@ -12,12 +12,13 @@ function UserHome() {
 
   const [user, setUser] = useState();
 
+  const [userId, setUserId] = useState();
+
   useEffect(() => {
-    console.log("runs");
     if (city == "") {
       setCity(localStorage.getItem("servifyCityName") || "");
     }
-  
+
     if (localStorage.getItem("userToken")) {
       axios
         .get("http://localhost:8000/api/user/details", {
@@ -26,8 +27,21 @@ function UserHome() {
           },
         })
         .then((response) => {
-          console.log(response)
-          setUser(response.data.user);
+          console.log(response);
+          setUserId(response.data.user.userId);
+          localStorage.setItem("userId", response.data.user.userId);
+
+          axios
+            .get(
+              `http://localhost:8000/api/user/getone/${response.data.user.userId}`
+            )
+            .then((res) => {
+              console.log(res);
+              setUser(res.data);
+            })
+            .catch((err) => {
+              console.error("Error fetching user details:", err);
+            });
         })
         .catch((error) => {
           console.error("Error fetching user details:", error);

@@ -1,9 +1,44 @@
 import { Box, Grid } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { MdError, MdVerified } from "react-icons/md";
 import { reviews } from "./reviews";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useState } from "react";
+import axios from "axios";
 
 function LeftSidebar({ providerData }) {
+  const [heart, setHeart] = useState(false);
+  const providerId = providerData._id;
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    const getFavorite = async () => {
+      const response = await axios.post(
+        "http://localhost:8000/api/utils/isfavorite/",
+        { userId: userId, providerId: providerId }
+      );
+      setHeart(response.data.success);
+    };
+    getFavorite();
+  });
+
+  const heartClicked = async () => {
+    if (heart) {
+      const response = await axios.post(
+        `http://localhost:8000/api/utils/removefavorite/`,
+        { userId, providerId }
+      );
+      console.log(response);
+    } else {
+      const response = await axios.post(
+        `http://localhost:8000/api/utils/addfavorite/`,
+        { userId, providerId }
+      );
+      console.log(response);
+    }
+    setHeart(!heart);
+  };
+
   return (
     <>
       <Box
@@ -49,7 +84,7 @@ function LeftSidebar({ providerData }) {
             </Grid>
             <Grid
               item
-              xs={8}
+              xs={7}
               sx={{ background: "#ececec", padding: "2rem 1rem 4rem 2rem " }}
             >
               <Box sx={{ fontSize: "1.8rem" }}>
@@ -104,6 +139,18 @@ function LeftSidebar({ providerData }) {
                   <Box>City : &nbsp;</Box>
                   <Box>{providerData.city}</Box>
                 </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={1} sx={{ background: "#ececec", pt: "2rem" }}>
+              <Box
+                sx={{ fontSize: "1.8rem", cursor: "pointer" }}
+                onClick={heartClicked}
+              >
+                {heart ? (
+                  <FaHeart color="#e51c53" />
+                ) : (
+                  <FaRegHeart color="#e51c53" />
+                )}
               </Box>
             </Grid>
           </Grid>

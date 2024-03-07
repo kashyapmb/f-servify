@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const defaultTheme = createTheme();
 
@@ -81,6 +82,12 @@ export default function Login() {
   function nagigateToEmailTaken() {
     navigate("/provider/forget");
   }
+
+  useEffect(() => {
+    if (localStorage.getItem("providerToken")) {
+      navigate("/provider");
+    }
+  });
 
   return (
     <ThemeProvider theme={defaultTheme}>

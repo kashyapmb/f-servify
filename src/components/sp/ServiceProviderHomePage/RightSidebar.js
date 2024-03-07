@@ -31,12 +31,6 @@ function MainArea(props) {
     navigate("/user/login");
   }
 
-  const selectedCity = (selectedcity) => {
-    setCity(selectedcity);
-    localStorage.setItem("servifyCityName", selectedcity);
-    console.log(city);
-  };
-
   const selectedService = (selectedservice) => {
     if (city == "") {
       alert("First of all select city");
@@ -53,7 +47,7 @@ function MainArea(props) {
   };
 
   const navigatetoUserProfile = () => {
-    navigate("/user/profile");
+    navigate(`/provider/profile/${user.userId}`);
   };
 
   function stringToColor(string) {
@@ -102,238 +96,31 @@ function MainArea(props) {
           }}
         >
           <Box>
-            <TextField
-              id="outlined-select-currency"
-              select
-              label="city name"
-              defaultValue="Select"
-              helperText="Please select where u want the service"
-              value={city}
-              sx={{ width: "35rem" }}
-            >
-              {cities.map((option) => (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  onClick={() => selectedCity(option.value)}
-                >
-                  {option.value}
-                </MenuItem>
-              ))}
-            </TextField>
+            Welcome, {user.fname} {user.lname}
           </Box>
           <Box>
-            {user ? (
-              <>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "1rem",
-                  }}
-                >
-                  <Avatar
-                    {...stringAvatar(
-                      `${user.fname.toUpperCase()} ${user.lname.toUpperCase()}`
-                    )}
-                    sx={{ bgcolor: "orange", cursor: "pointer" }}
-                    onClick={navigatetoUserProfile}
-                  />
-                  <Button
-                    variant="contained"
-                    sx={{ background: "orange" }}
-                    onClick={deleteToken}
-                  >
-                    Log out
-                  </Button>
-                </Box>
-              </>
-            ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "1rem",
+              }}
+            >
               <Avatar
-                src="/broken-image.jpg"
+                {...stringAvatar(
+                  `${user.fname.toUpperCase()} ${user.lname.toUpperCase()}`
+                )}
                 sx={{ bgcolor: "orange", cursor: "pointer" }}
-                onClick={gotoUserLogin}
+                onClick={navigatetoUserProfile}
               />
-            )}
-          </Box>
-        </Box>
-
-        {/* services component */}
-        <Box sx={{ marginTop: "1rem" }}>
-          <Box sx={{ fontSize: "1.3rem", fontWeight: "600", margin: "1rem 0" }}>
-            Services
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              gap: "3rem",
-              flexWrap: "wrap",
-            }}
-          >
-            {services.map((option) => (
-              <Box
-                sx={{
-                  width: "10rem",
-                  height: "10rem",
-                  borderRadius: "11px",
-                  background: "#ffffff",
-                  transition: "0.5s",
-                  boxShadow: " 8px 8px 28px #dbdbdb, -8px -8px 28px #ffffff",
-
-                  ":hover": {
-                    borderRadius: "11px",
-                    background: "linear-gradient(145deg,  #ffffff, #e6e6e6)",
-                    boxShadow:
-                      "15px 15px 30px #bfbfbf, -15px -15px 30px #ffffff",
-                  },
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-                onClick={() => selectedService(option.value)}
+              <Button
+                variant="contained"
+                sx={{ background: "orange" }}
+                onClick={deleteToken}
               >
-                <img src="images/typeuser.png" style={{ width: "5rem" }} />
-                <Box sx={{ textAlign: "center", margin: "0.5rem" }}>
-                  {option.value}
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        {/* your search activity */}
-        <Box sx={{ marginTop: "1rem" }}>
-          <Box
-            sx={{
-              fontSize: "1.3rem",
-              fontWeight: "600",
-              margin: "3rem 0 1rem 0",
-            }}
-          >
-            Your Search Activity
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              gap: "3rem",
-              flexWrap: "wrap",
-            }}
-          >
-            {services.map((option) => (
-              <Card
-                sx={{ maxWidth: 345, borderRadius: "11px", cursor: "pointer" }}
-              >
-                <CardHeader
-                  avatar={
-                    <Avatar sx={{ bgcolor: "red" }} variant="rounded">
-                      K
-                    </Avatar>
-                  }
-                  title="Kashyap Bavadiya"
-                  subheader="Software Developer"
-                  sx={{ marginBottom: "0rem" }}
-                />
-                <CardContent sx={{ paddingTop: "0", paddingBottom: "10px" }}>
-                  <Box>22yrs, surat</Box>
-                  <Box>Expertise: web development, Software development</Box>
-                </CardContent>
-                <hr />
-                <CardContent sx={{ paddingTop: "0" }}>
-                  <Box sx={{ display: "flex", gap: "2rem" }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      <GoHeart /> <Box>0</Box>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      <GoStarFill color="yellow" /> <Box>4.5(10 reviews)</Box>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            ))}
-          </Box>
-        </Box>
-
-        {/* Suggested Profiles */}
-        <Box sx={{ marginTop: "1rem" }}>
-          <Box
-            sx={{
-              fontSize: "1.3rem",
-              fontWeight: "600",
-              margin: "3rem 0 1rem 0",
-            }}
-          >
-            Suggested Profiles
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              gap: "3rem",
-              flexWrap: "wrap",
-            }}
-          >
-            {services.map((option) => (
-              <Card
-                sx={{ maxWidth: 345, borderRadius: "11px", cursor: "pointer" }}
-              >
-                <CardHeader
-                  avatar={
-                    <Avatar sx={{ bgcolor: "red" }} variant="rounded">
-                      K
-                    </Avatar>
-                  }
-                  title="Kashyap Bavadiya"
-                  subheader="Software Developer"
-                  sx={{ marginBottom: "0rem" }}
-                />
-                <CardContent sx={{ paddingTop: "0", paddingBottom: "10px" }}>
-                  <Box>22yrs, surat</Box>
-                  <Box>Expertise: web development, Software development</Box>
-                </CardContent>
-                <hr />
-                <CardContent sx={{ paddingTop: "0" }}>
-                  <Box sx={{ display: "flex", gap: "2rem" }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      <GoHeart /> <Box>0</Box>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      <GoStarFill color="yellow" /> <Box>4.5(10 reviews)</Box>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            ))}
+                Log out
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Box>

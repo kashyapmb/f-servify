@@ -30,7 +30,7 @@ import RightSidebar from "./RightSidebar";
 
 function SPDetails() {
   const [id, setId] = useState();
-  const [providerData, setProviderData] = useState([]);
+  const [providerData, setProviderData] = useState({});
 
   const setProviderID = async () => {
     // fetch id from  url
@@ -43,7 +43,6 @@ function SPDetails() {
       const response = await axios.get(
         `http://localhost:8000/api/provider/getone/${id}`
       );
-      console.log(response.data);
       setProviderData(response.data);
     } catch (error) {
       console.error(error);

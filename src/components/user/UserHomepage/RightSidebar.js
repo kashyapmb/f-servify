@@ -53,7 +53,7 @@ function MainArea(props) {
   };
 
   const navigatetoUserProfile = () => {
-    navigate(`/user/profile/${user.userId}`);
+    navigate(`/user/profile/${user._id}`);
   };
 
   function stringToColor(string) {
