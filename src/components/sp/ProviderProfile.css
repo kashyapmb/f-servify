@@ -1,0 +1,32 @@
+.container_image {
+    position: relative;
+    width: 10rem;
+    height: 10rem; /* Adjust according to your image size */
+  }
+  
+  .bottom_image {
+    width: 10rem;
+    height: 10rem;
+    border: 1px solid black;
+  }
+  
+  .upper_image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10rem;
+    height: 10rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border: 1px solid black;
+  }
+  
+  .container_image:hover .upper_image {
+    cursor: pointer;
+    opacity: 0.8;
+    z-index: 3;
+  }
+  .container:hover .bottom_image {
+    opacity: 0.1;
+  }
+  

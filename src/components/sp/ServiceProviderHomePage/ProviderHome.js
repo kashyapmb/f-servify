@@ -10,11 +10,12 @@ import { useNavigate } from "react-router-dom";
 
 function ProviderHome() {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState();
+  const [providerId, setProviderId] = useState();
+  const [provider, setProvider] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProviderData = async () => {
+    const fetchProviderId = async () => {
       await axios
         .get("http://localhost:8000/api/user/details", {
           headers: {
@@ -22,7 +23,21 @@ function ProviderHome() {
           },
         })
         .then((response) => {
-          setUser(response.data.user);
+          setProviderId(response.data.user.userId);
+          localStorage.setItem("providerId", response.data.user.userId);
+          fetchProviderData(response.data.user.userId);
+        })
+        .catch((error) => {
+          console.error("Error fetching user details:", error);
+        });
+    };
+    const fetchProviderData = async (providerId) => {
+      await axios
+        .get(`http://localhost:8000/api/provider/getone/${providerId}`)
+        .then((response) => {
+          console.log("Provider:", response.data);
+          setProvider(response.data);
+          setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching user details:", error);
@@ -30,22 +45,24 @@ function ProviderHome() {
     };
 
     if (localStorage.getItem("providerToken")) {
-      fetchProviderData();
+      fetchProviderId();
     } else {
       navigate("/provider/login");
     }
-  });
+  }, []);
+
+  if (loading) return <h1>Loading...</h1>;
 
   return (
     <>
-      {user && (
+      {provider && (
         <Box sx={{ height: "100%", background: "#f2f2f7", padding: "1rem" }}>
           <Grid container>
             <Grid item xs={3}>
-              <LeftSidebar />
+              <LeftSidebar provider={provider} />
             </Grid>
             <Grid item xs={8}>
-              <RightSidebar user={user} />
+              <RightSidebar provider={provider} />
             </Grid>
           </Grid>
         </Box>

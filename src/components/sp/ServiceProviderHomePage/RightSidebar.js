@@ -23,23 +23,9 @@ import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 
 function MainArea(props) {
-  const { city, setCity, user } = props;
+  const { provider } = props;
 
   const navigate = useNavigate();
-
-  function gotoUserLogin() {
-    navigate("/user/login");
-  }
-
-  const selectedService = (selectedservice) => {
-    if (city == "") {
-      alert("First of all select city");
-      return;
-    }
-    console.log(selectedservice);
-
-    navigate(`/user/${city.toLowerCase()}/${selectedservice.toLowerCase()}`);
-  };
 
   const deleteToken = () => {
     localStorage.removeItem("providerToken");
@@ -47,7 +33,7 @@ function MainArea(props) {
   };
 
   const navigatetoUserProfile = () => {
-    navigate(`/provider/profile/${user.userId}`);
+    navigate(`/provider/profile/${provider._id}`);
   };
 
   function stringToColor(string) {
@@ -96,7 +82,7 @@ function MainArea(props) {
           }}
         >
           <Box>
-            Welcome, {user.fname} {user.lname}
+            Welcome, {provider.fname} {provider.lname}
           </Box>
           <Box>
             <Box
@@ -108,7 +94,7 @@ function MainArea(props) {
             >
               <Avatar
                 {...stringAvatar(
-                  `${user.fname.toUpperCase()} ${user.lname.toUpperCase()}`
+                  `${provider.fname.toUpperCase()} ${provider.lname.toUpperCase()}`
                 )}
                 sx={{ bgcolor: "orange", cursor: "pointer" }}
                 onClick={navigatetoUserProfile}
