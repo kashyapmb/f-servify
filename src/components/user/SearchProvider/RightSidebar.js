@@ -121,23 +121,15 @@ function RightSidebar() {
                   {/* img, name and profession  */}
                   <Box sx={{ display: "flex" }}>
                     <Box>
-                      {obj.gender == "Male" ? (
-                        <img
-                          src="https://xsgames.co/randomusers/assets/avatars/male/1.jpg"
-                          style={{
-                            width: "6rem",
-                            borderRadius: "1rem",
-                          }}
-                        />
-                      ) : (
-                        <img
-                          src="https://xsgames.co/randomusers/assets/avatars/female/1.jpg"
-                          style={{
-                            width: "6rem",
-                            borderRadius: "1rem",
-                          }}
-                        />
-                      )}
+                      <img
+                        src={obj.profilePhoto}
+                        style={{
+                          width: "6rem",
+                          height: "6rem",
+                          border: "1px solid black",
+                          borderRadius: "1rem",
+                        }}
+                      />
                     </Box>
                     <Box
                       sx={{

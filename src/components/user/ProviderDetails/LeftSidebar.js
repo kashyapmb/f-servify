@@ -71,9 +71,10 @@ function LeftSidebar({ providerData }) {
                 }}
               >
                 <img
-                  src="https://xsgames.co/randomusers/assets/avatars/male/3.jpg"
+                  src={providerData.profilePhoto}
                   style={{
-                    width: "80%",
+                    width: "10rem",
+                    height: "10rem",
                   }}
                 />
                 <Box sx={{ mt: "2rem", fontSize: "1.1rem", display: "flex" }}>
