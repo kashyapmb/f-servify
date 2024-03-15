@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import LeftSidebar from "./LeftSidebar";
-import MainArea from "./RightSidebar";
+import RightSidebar from "./RightSidebar";
 import axios from "axios";
 
 function UserHome() {
@@ -38,6 +38,7 @@ function UserHome() {
             .then((res) => {
               console.log(res);
               setUser(res.data);
+              localStorage.setItem("isLoggedIn", true);
             })
             .catch((err) => {
               console.error("Error fetching user details:", err);
@@ -47,7 +48,7 @@ function UserHome() {
           console.error("Error fetching user details:", error);
         });
     } else {
-      console.log("No token found in localStorage. User is not logged in.");
+      localStorage.setItem("isLoggedIn", false);
     }
   }, []);
   return (
@@ -58,7 +59,7 @@ function UserHome() {
             <LeftSidebar />
           </Grid>
           <Grid item xs={8}>
-            <MainArea city={city} setCity={setCity} user={user} />
+            <RightSidebar city={city} setCity={setCity} user={user} />
           </Grid>
         </Grid>
       </Box>

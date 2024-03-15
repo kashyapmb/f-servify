@@ -26,20 +26,25 @@ import { RiVerifiedBadgeFill } from "react-icons/ri";
 import axios from "axios";
 
 function Favorite() {
+  const navigate = useNavigate();
   const [providers, setProviders] = useState({});
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const getFavorites = async () => {
-      await axios
-        .post(`http://localhost:8000/api/utils/getfavorites/`, {
-          userId: localStorage.getItem("userId"),
-        })
-        .then((response) => {
-          setProviders(response.data.favoriteProvidersData);
-          setLoading(false);
-        });
-    };
-    getFavorites();
+    if (localStorage.getItem("userId")) {
+      const getFavorites = async () => {
+        await axios
+          .post(`http://localhost:8000/api/utils/getfavorites/`, {
+            userId: localStorage.getItem("userId"),
+          })
+          .then((response) => {
+            setProviders(response.data.favoriteProvidersData);
+            setLoading(false);
+          });
+      };
+      getFavorites();
+    } else {
+      navigate("/user/login");
+    }
   }, []);
   if (loading) return <div>Loading......</div>;
   return (

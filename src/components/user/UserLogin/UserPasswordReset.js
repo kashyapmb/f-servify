@@ -16,6 +16,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
 
 function UserPasswordReset() {
   const dataObj = {
@@ -37,23 +38,23 @@ function UserPasswordReset() {
   }, []);
 
   const navigate = useNavigate();
-  const changePassword = (e) => {
+  const changePassword = async (e) => {
     // e.preventDefault();
     if (formData.password === "") {
-      alert("Enter your new password");
+      toast.error("Enter your new password");
       return;
     } else if (formData.cpassword === "") {
-      alert("Enter your confirm password");
+      toast.error("Enter your confirm password");
       return;
     } else if (formData.password.length < 6) {
-      alert("Password should be greater than or equal to 6 characters");
+      toast.error("Password should be greater than or equal to 6 characters");
       return;
     } else if (formData.password != formData.cpassword) {
-      alert("Both password and confirm password should be same");
+      toast.error("Both password and confirm password should be same");
       return;
     } else {
       let newPassword = formData.password;
-      axios
+      await axios
         .post("http://localhost:8000/api/user/updatepassword", {
           email,
           newPassword,
@@ -67,6 +68,8 @@ function UserPasswordReset() {
   return (
     <>
       <Container component="main" maxWidth="xs">
+        <Toaster />
+
         <CssBaseline />
         <Box
           sx={{

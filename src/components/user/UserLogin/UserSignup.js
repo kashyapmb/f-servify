@@ -14,14 +14,19 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { useRef } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import { toast, Toaster } from "react-hot-toast";
+import PhoneInput from "react-phone-input-2";
 
-const steps = ["Personal Information", "Verify Email Address"];
+const steps = [
+  "Personal Information",
+  "Verify Email Address",
+  "Verify Mobile Number",
+];
 
 export default function UserSignup() {
   const dataObj = {
@@ -35,9 +40,11 @@ export default function UserSignup() {
 
   const [formData, setFormData] = useState(dataObj);
   const [otp, setOTP] = useState("");
+  const [mobileOTPinput, setMobileOTPinput] = useState("");
   const [OTPinput, setOTPinput] = useState("");
   const [disable, setDisable] = useState(true);
   const [timerCount, setTimer] = React.useState(60);
+  const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {
     let interval = setInterval(() => {
@@ -50,20 +57,6 @@ export default function UserSignup() {
     }, 1000);
     return () => clearInterval(interval);
   }, [disable]);
-
-  const sendOTPtogivenEmail = async (e) => {
-    e.preventDefault();
-
-    const OTP = Math.floor(Math.random() * 9000 + 1000);
-    setOTP(OTP);
-
-    await axios
-      .post("http://localhost:8000/send_recovery_email", {
-        OTP,
-        recipient_email: formData.email,
-      })
-      .catch(console.log);
-  };
 
   const resendOTP = async () => {
     if (disable) return;
@@ -80,59 +73,17 @@ export default function UserSignup() {
       .catch(console.log);
   };
 
-  const verfiyOTP = async (e) => {
-    e.preventDefault();
-    try {
-      if (OTPinput == otp) {
-        console.log("Called");
-        await handleSubmit(e);
-        alert("Account created succesfully");
-        navigate("/user");
-        return;
-      } else {
-        alert(
-          "The code you have entered is not correct, try again or re-send the link"
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const inputHandler = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
-  const OTPinputHandler = (e) => {
-    let str = e.target.value;
-    if (/^\d{0,4}$/.test(str)) {
-      setOTPinput(str);
-    }
   };
   const emailInputHandler = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value.toLowerCase() });
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/user/create",
-        formData
-      );
-      localStorage.setItem("userToken", response.data.token);
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
-      console.error("Signup Error:", error);
-    }
+  const mobileInputHandler = (e) => {
+    setFormData({ ...formData, mobile: e });
   };
-
-  const navigate = useNavigate();
-  const navigateToSignIn = () => [navigate("/user/login")];
-
-  //Stepper for sign up
-  const [activeStep, setActiveStep] = React.useState(0);
 
   const isValidEmail = async (e) => {
     const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -149,14 +100,76 @@ export default function UserSignup() {
     }
   };
 
+  const OTPinputHandler = (e) => {
+    let str = e.target.value;
+    if (/^\d{0,4}$/.test(str)) {
+      setOTPinput(str);
+    }
+  };
+  const MobileOTPinputHandler = (e) => {
+    let str = e.target.value;
+    if (/^\d{0,6}$/.test(str)) {
+      setMobileOTPinput(str);
+    }
+  };
+
+  const navigate = useNavigate();
+  const navigateToSignIn = () => [navigate("/user/login")];
+
   const validMobile = async (mobile) => {
-    if (/^\d{10}$/.test(mobile)) {
+    if (/^\d{12}$/.test(mobile)) {
       return true;
     }
     return false;
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/user/create",
+        formData
+      );
+      console.log(response);
+      localStorage.setItem("userToken", response.data.token);
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+
+  const sendOTPtogivenEmail = async (e) => {
+    e.preventDefault();
+    const OTP = Math.floor(Math.random() * 9000 + 1000);
+    setOTP(OTP);
+    await axios
+      .post("http://localhost:8000/send_recovery_email", {
+        OTP,
+        recipient_email: formData.email,
+      })
+      .catch(console.log);
+  };
+  const sendOTPtogivenMobile = async (e) => {
+    e.preventDefault();
+
+    const mobile = "+" + formData.mobile;
+    console.log(mobile);
+
+    try {
+      await axios
+        .post("http://localhost:8000/sendOTP", {
+          mobile,
+        })
+        .then((response) => {
+          console.log(response);
+          toast.success("OTP sent to given number!");
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleNext = async (e) => {
+    e.preventDefault();
     if (activeStep === 0) {
       if (
         formData.fname &&
@@ -175,34 +188,68 @@ export default function UserSignup() {
                   setTimer(60);
                   setActiveStep((prevActiveStep) => prevActiveStep + 1);
                 } else {
-                  alert("Password and C. Password should be same");
+                  toast.error("Password and C. Password should be same");
                 }
               } else {
-                alert(
+                toast.error(
                   "Password should be greater than or equal to 6 character"
                 );
               }
             } else {
-              alert("Email exist in our database...try with new email address");
+              toast.error(
+                "Email exist in our database...try again with new email address"
+              );
             }
           } else {
-            alert("Enter valid email");
+            toast.error("Enter valid email address");
           }
         } else {
-          alert("Enter valid mobile  number");
+          toast.error("Enter valid mobile  number");
         }
       } else {
-        alert("Enter all the information");
+        toast.error("Enter all the information");
+      }
+    } else if (activeStep === 1) {
+      try {
+        if (OTPinput == otp) {
+          await sendOTPtogivenMobile(e);
+          setTimer(60);
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          return;
+        } else {
+          toast.error(
+            "The code you have entered is not correct, try again or re-send the link"
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (activeStep === 2) {
+      const mobile = '+' + formData.mobile;
+      try {
+        await axios
+          .post("http://localhost:8000/enterotp", {
+            mobile,
+            otp: mobileOTPinput,
+          })
+          .then(async (response) => {
+            console.log(response);
+            toast.success("Mobile Verified");
+            await handleSubmit(e);
+            toast.success("Account created succesfully");
+            navigate("/user");
+            return;
+          });
+      } catch (error) {
+        toast.error("Enter valid OTP");
+        console.log(error);
       }
     }
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   return (
     <Box sx={{ padding: "0 0 5rem 0" }}>
+      <Toaster />
       <Container component="main" maxWidth="md">
         <Box
           sx={{
@@ -290,15 +337,12 @@ export default function UserSignup() {
                         />
                       </Grid>
                       <Grid item xs={12}>
-                        <TextField
-                          required
+                        <PhoneInput
                           fullWidth
-                          id="mobile"
-                          label="Mobile No."
-                          name="mobile"
-                          autoComplete="mobile"
+                          inputStyle={{ width: "100%", height: "3.5rem" }}
+                          country={"in"}
                           value={formData.mobile}
-                          onChange={inputHandler}
+                          onChange={mobileInputHandler}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -341,56 +385,97 @@ export default function UserSignup() {
                   </React.Fragment>
                 )}
                 {activeStep === 1 && (
-                  <React.Fragment>
-                    <Grid container spacing={2} sx={{ ml: "1rem" }}>
+                  <Box sx={{ width: "20rem" }}>
+                    <Box
+                      sx={{
+                        fontSize: "1.3rem",
+                        mt: "1rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Email Verification
+                    </Box>
+                    <Box>
                       <Box
                         sx={{
-                          fontSize: "1.3rem",
+                          fontSize: "1rem",
                           mt: "2rem",
-                          fontWeight: "600",
+                          alignSelf: "center",
                         }}
                       >
-                        Email Verification
+                        We have sent a code to this email : {formData.email}
                       </Box>
+                    </Box>
+                    <Box component="form" noValidate sx={{ mt: 1 }}>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="otp"
+                        label="Enter 4 digit OTP"
+                        name="otp"
+                        autoComplete="otp"
+                        autoFocus
+                        value={OTPinput}
+                        onChange={OTPinputHandler}
+                      />
+                    </Box>
+
+                    <Box sx={{ display: "flex", mt: "0.5rem", mb: "3rem" }}>
+                      <Box>Didn't recieve code?</Box>&nbsp;
+                      <Box
+                        style={{
+                          color: disable ? "gray" : "blue",
+                          cursor: disable ? "none" : "pointer",
+                          textDecorationLine: disable ? "none" : "underline",
+                        }}
+                        onClick={() => resendOTP()}
+                      >
+                        {disable
+                          ? ` Resend OTP in ${timerCount}s`
+                          : " Resend OTP"}
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+                {activeStep === 2 && (
+                  <React.Fragment>
+                    <Grid container spacing={2} sx={{ ml: "1rem" }}>
                       <Box>
                         <Box
                           sx={{
-                            fontSize: "1rem",
+                            fontSize: "1.3rem",
                             mt: "2rem",
-                            alignSelf: "center",
+                            fontWeight: "600",
                           }}
                         >
-                          We have sent a code to this email : {formData.email}
+                          Mobile Verification
                         </Box>
-                      </Box>
-                      <Box component="form" noValidate sx={{ mt: 1 }}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="otp"
-                          label="Enter 4 digit OTP"
-                          name="otp"
-                          autoComplete="otp"
-                          autoFocus
-                          value={OTPinput}
-                          onChange={OTPinputHandler}
-                        />
-                      </Box>
-
-                      <Box sx={{ display: "flex", mt: "0.5rem", mb: "3rem" }}>
-                        <Box>Didn't recieve code?</Box>&nbsp;
-                        <Box
-                          style={{
-                            color: disable ? "gray" : "blue",
-                            cursor: disable ? "none" : "pointer",
-                            textDecorationLine: disable ? "none" : "underline",
-                          }}
-                          onClick={() => resendOTP()}
-                        >
-                          {disable
-                            ? ` Resend OTP in ${timerCount}s`
-                            : " Resend OTP"}
+                        <Box>
+                          <Box
+                            sx={{
+                              fontSize: "1rem",
+                              mt: "2rem",
+                              alignSelf: "center",
+                            }}
+                          >
+                            We have sent a code to this number :{" +"}
+                            {formData.mobile}
+                          </Box>
+                        </Box>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
+                          <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="otp"
+                            label="Enter 6 digit OTP"
+                            name="otp"
+                            autoComplete="otp"
+                            autoFocus
+                            value={mobileOTPinput}
+                            onChange={MobileOTPinputHandler}
+                          />
                         </Box>
                       </Box>
                     </Grid>
@@ -406,24 +491,26 @@ export default function UserSignup() {
                   <Button
                     color="inherit"
                     disabled={activeStep === 0}
-                    onClick={handleBack}
+                    onClick={() => {
+                      setActiveStep((prevActiveStep) => prevActiveStep - 1);
+                    }}
                     sx={{ mr: 1 }}
                   >
                     Back
                   </Button>
                   <Box sx={{ flex: "1 1 auto" }} />
 
-                  {activeStep === steps.length - 1 ? (
+                  {activeStep === 0 ? (
+                    <Button onClick={handleNext} variant="contained">
+                      Next
+                    </Button>
+                  ) : (
                     <Button
                       type="submit"
                       variant="contained"
-                      onClick={verfiyOTP}
+                      onClick={handleNext}
                     >
-                      Create account
-                    </Button>
-                  ) : (
-                    <Button onClick={handleNext} variant="contained">
-                      Next
+                      Verify OTP
                     </Button>
                   )}
                 </Box>

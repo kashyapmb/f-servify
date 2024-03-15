@@ -15,6 +15,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useState } from "react";
 import { createContext } from "react";
+import { toast, Toaster } from "react-hot-toast";
+
 function UserEmailTaken() {
   const navigate = useNavigate();
 
@@ -31,7 +33,7 @@ function UserEmailTaken() {
   const emailExist = async (email) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/provider/search/${email}`
+        `http://localhost:8000/api/user/search/${email}`
       );
       return true;
     } catch (error) {
@@ -46,7 +48,7 @@ function UserEmailTaken() {
         if (await emailExist(email)) {
           const OTP = Math.floor(Math.random() * 9000 + 1000);
 
-          axios
+          await axios
             .post("http://localhost:8000/send_recovery_email", {
               OTP,
               recipient_email: email,
@@ -58,18 +60,20 @@ function UserEmailTaken() {
             )
             .catch(console.log);
         } else {
-          alert("Email not exist in our database");
+          toast.error("Email not exist in our database");
         }
       } else {
-        alert("Enter correct Email Address");
+        toast.error("Enter correct email address");
       }
     } else {
-      alert("Enter your email address");
+      toast.error("Enter your email address");
     }
   };
   return (
     <>
       <Container component="main" maxWidth="xs">
+        <Toaster />
+
         <CssBaseline />
         <Box
           sx={{

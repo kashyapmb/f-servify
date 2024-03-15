@@ -47,12 +47,22 @@ function ProviderProfile() {
 
   useEffect(() => {
     const sendDetails = async () => {
-      console.log("Updated", providerId)
-      const response = await axios.put(
-        `http://localhost:8000/api/provider/updateDetails/${providerId}`,
-        editedProvider1
-      );
-      console.log(response);
+      try {
+        console.log("Updated", providerId);
+        console.log("Want to save this data", editedProvider1);
+        const response = await axios.put(
+          `http://localhost:8000/api/provider/updateDetails/${providerId}`,
+          editedProvider1
+        );
+        const res = await axios.post(
+          `http://localhost:8000/api/admin/providerediteddata`,
+          editedProvider1
+        );
+        console.log(response);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
     };
     sendDetails();
   }, [editedProvider1]);
@@ -139,8 +149,13 @@ function ProviderProfile() {
   };
 
   const updateDetailINDatabase = async (updatedUser) => {
+    console.log("Want to save  this data", updatedUser);
     const response = await axios.put(
       `http://localhost:8000/api/provider/updateDetails/${providerId}`,
+      updatedUser
+    );
+    const res = await axios.post(
+      `http://localhost:8000/api/admin/providerediteddata`,
       updatedUser
     );
   };

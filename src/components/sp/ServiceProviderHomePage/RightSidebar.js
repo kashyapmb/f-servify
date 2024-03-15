@@ -89,14 +89,13 @@ function MainArea(props) {
               sx={{
                 display: "flex",
                 justifyContent: "center",
+                alignItems: "center",
                 gap: "1rem",
               }}
             >
               <Avatar
-                {...stringAvatar(
-                  `${provider.fname.toUpperCase()} ${provider.lname.toUpperCase()}`
-                )}
-                sx={{ bgcolor: "orange", cursor: "pointer" }}
+                src={provider.profilePhoto}
+                sx={{ width: "3rem", height: "3rem", cursor: "pointer" }}
                 onClick={navigatetoUserProfile}
               />
               <Button

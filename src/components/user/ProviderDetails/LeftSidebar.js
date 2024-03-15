@@ -13,11 +13,15 @@ function LeftSidebar({ providerData }) {
 
   useEffect(() => {
     const getFavorite = async () => {
-      const response = await axios.post(
-        "http://localhost:8000/api/utils/isfavorite/",
-        { userId: userId, providerId: providerId }
-      );
-      setHeart(response.data.success);
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/api/utils/isfavorite/",
+          { userId: userId, providerId: providerId }
+        );
+        setHeart(response.data.success);
+      } catch (error) {
+        console.log(error);
+      }
     };
     getFavorite();
   });

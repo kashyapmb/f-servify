@@ -56,7 +56,15 @@ function UserProfile() {
       );
       console.log(response);
     };
+    const sendDetailsUserEdited = async () => {
+      const response = await axios.put(
+        `http://localhost:8000/api/admin/userediteddata`,
+        editedUser1
+      );
+      console.log(response);
+    };
     sendDetails();
+    sendDetailsUserEdited();
   }, [editedUser1]);
 
   const handleEdit = () => {
@@ -131,6 +139,7 @@ function UserProfile() {
         }
 
         setEdit(false);
+        window.location.reload();
       } else {
         alert("Enter valid Mobile Number");
       }
@@ -146,6 +155,11 @@ function UserProfile() {
       updatedUser
     );
     console.log(response);
+    const res = await axios.post(
+      `http://localhost:8000/api/admin/userediteddata`,
+      updatedUser
+    );
+    console.log(res);
   };
 
   return (

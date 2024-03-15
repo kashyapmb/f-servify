@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import { toast, Toaster } from "react-hot-toast";
 
 function UserVerifyOTP() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ function UserVerifyOTP() {
       .then(() => {
         setOTP(new_OTP);
         setDisable(true);
-        alert("A new OTP has succesfully been sent to your email.");
+        toast.success("A new OTP has succesfully been sent to your email.");
         setTimer(60);
       })
       .catch(console.log);
@@ -48,9 +49,7 @@ function UserVerifyOTP() {
     if (OTPinput == otp) {
       navigate("/user/resetpass", { state: { email: email } });
     } else {
-      alert(
-        "The code you have entered is not correct, try again or re-send the link"
-      );
+      toast.error("Incorrect OTP");
     }
   };
 
@@ -75,6 +74,7 @@ function UserVerifyOTP() {
   }, [disable]);
 
   React.useEffect(() => {
+    toast.success("OTP sent on given email");
     if (location.state) {
       setOTP(location.state.otp);
       setEmail(location.state.email);
@@ -84,6 +84,8 @@ function UserVerifyOTP() {
   return (
     <>
       <Container component="main" maxWidth="xs">
+        <Toaster />
+
         <CssBaseline />
         <Box
           sx={{

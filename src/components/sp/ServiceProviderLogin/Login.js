@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "@mui/material";
+import { Alert, AlertTitle, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,7 +21,11 @@ const defaultTheme = createTheme();
 export default function Login() {
   const [email, setEmail] = useState();
   const emailInputHandler = (e) => {
+    setErrorFalse();
     setEmail(e.target.value.toLowerCase());
+  };
+  const passwordInputHandler = (e) => {
+    setErrorFalse();
   };
   const validEmail = async (email) => {
     if (/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
@@ -41,6 +45,7 @@ export default function Login() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorFalse();
     const data = new FormData(e.currentTarget);
     let password = data.get("password");
     if (email && password) {
@@ -58,17 +63,16 @@ export default function Login() {
             localStorage.setItem("providerToken", token);
             navigateToProviderHomePage();
           } catch (error) {
-            alert("Invalid email or Password");
-            console.error(error);
+            setInvalidPassError(true);
           }
         } else {
-          alert("Email not exist in our databse");
+          setEmailDatabaseError(true);
         }
       } else {
-        alert("Enter valid Email Address");
+        setEmailError(true);
       }
     } else {
-      alert("Enter all information");
+      setAllInfoError(true);
     }
   };
 
@@ -89,10 +93,24 @@ export default function Login() {
     }
   });
 
+  const [emailError, setEmailError] = useState(false);
+  const [emailDatabaseError, setEmailDatabaseError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [allInfoError, setAllInfoError] = useState(false);
+  const [invalidPassError, setInvalidPassError] = useState(false);
+  const setErrorFalse = () => {
+    setEmailError(false);
+    setEmailDatabaseError(false);
+    setPasswordError(false);
+    setAllInfoError(false);
+    setInvalidPassError(false);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+
         <Box
           sx={{
             marginTop: 8,
@@ -123,6 +141,32 @@ export default function Login() {
               value={email}
               onChange={emailInputHandler}
             />
+            {emailError && (
+              <Alert
+                severity="error"
+                sx={{
+                  borderRadius: "8px",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                Enter valid Email Address
+              </Alert>
+            )}
+            {emailDatabaseError && (
+              <Alert
+                severity="error"
+                sx={{
+                  borderRadius: "8px",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                This e-mail not exist in our databse
+              </Alert>
+            )}
             <TextField
               margin="normal"
               required
@@ -132,7 +176,47 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={passwordInputHandler}
             />
+            {passwordError && (
+              <Alert
+                severity="error"
+                sx={{
+                  borderRadius: "8px",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                Enter valid Email Address
+              </Alert>
+            )}
+            {allInfoError && (
+              <Alert
+                severity="error"
+                sx={{
+                  borderRadius: "8px",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                Enter all information
+              </Alert>
+            )}
+            {invalidPassError && (
+              <Alert
+                severity="error"
+                sx={{
+                  borderRadius: "8px",
+                  padding: "10px",
+                  marginBottom: "10px",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                Invalid Email and Password
+              </Alert>
+            )}
 
             <Button
               type="submit"

@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
 
 const defaultTheme = createTheme();
 
@@ -60,21 +61,23 @@ export default function UserLogin() {
                 password,
               }
             );
+            console.log(response)
             const token = response.data.token;
             localStorage.setItem("userToken", token);
+            localStorage.setItem("userId", token);
             navigateToUserHomePage();
+            toast.success("Login successful....");
           } catch (error) {
-            alert("Invalid email or Password");
-            console.error(error);
+            toast.error("Invalid email or Password");
           }
         } else {
-          alert("Email not exist in our databse");
+          toast.error("Email not exist in our databse");
         }
       } else {
-        alert("Enter valid Email Address");
+        toast.error("Enter valid Email Address");
       }
     } else {
-      alert("Enter all information");
+      toast.error("Enter all information");
     }
   };
 
@@ -85,6 +88,8 @@ export default function UserLogin() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Toaster />
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

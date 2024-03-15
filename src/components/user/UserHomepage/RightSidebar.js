@@ -22,7 +22,7 @@ import { MdHome } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 
-function MainArea(props) {
+function RightSidebar(props) {
   const { city, setCity, user } = props;
 
   const navigate = useNavigate();
@@ -49,6 +49,7 @@ function MainArea(props) {
 
   const deleteToken = () => {
     localStorage.removeItem("userToken");
+    localStorage.removeItem("userId");
     window.location.reload();
   };
 
@@ -129,14 +130,18 @@ function MainArea(props) {
                   sx={{
                     display: "flex",
                     justifyContent: "center",
+                    alignItems: "center",
                     gap: "1rem",
                   }}
                 >
-                  <Avatar
-                    {...stringAvatar(
-                      `${user.fname.toUpperCase()} ${user.lname.toUpperCase()}`
-                    )}
-                    sx={{ bgcolor: "orange", cursor: "pointer" }}
+                  <img
+                    src={user.profilePhoto}
+                    style={{
+                      width: "3rem",
+                      height: "3rem",
+                      borderRadius: "50%",
+                      cursor: "pointer",
+                    }}
                     onClick={navigatetoUserProfile}
                   />
                   <Button
@@ -210,7 +215,7 @@ function MainArea(props) {
         </Box>
 
         {/* your search activity */}
-        <Box sx={{ marginTop: "1rem" }}>
+        {/* <Box sx={{ marginTop: "1rem" }}>
           <Box
             sx={{
               fontSize: "1.3rem",
@@ -274,10 +279,10 @@ function MainArea(props) {
               </Card>
             ))}
           </Box>
-        </Box>
+        </Box> */}
 
         {/* Suggested Profiles */}
-        <Box sx={{ marginTop: "1rem" }}>
+        {/* <Box sx={{ marginTop: "1rem" }}>
           <Box
             sx={{
               fontSize: "1.3rem",
@@ -341,10 +346,10 @@ function MainArea(props) {
               </Card>
             ))}
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </>
   );
 }
 
-export default MainArea;
+export default RightSidebar;

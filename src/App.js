@@ -27,6 +27,7 @@ import FirebaseImageUpload from "./components/firebaseImageupload/FirebaseImageU
 import Favorite from "./components/user/Favorites/Favorite";
 import VerifyEmail from "./components/sp/Verification/VerifyEmail";
 import VerifyMobile from "./components/sp/Verification/VerifyMobile";
+import Homepage from "./components/admin/Homepage";
 function App() {
   return (
     <>
@@ -52,12 +53,17 @@ function App() {
           <Route path="/provider/otpverify" element={<VerifyOTP />} />
           <Route path="/provider/resetpass" element={<PasswordReset />} />
           <Route path="/provider/recovered" element={<Recovered />} />
-          <Route path="/provider/profile/:providerId" element={<ProviderProfile />} />
+          <Route
+            path="/provider/profile/:providerId"
+            element={<ProviderProfile />}
+          />
           <Route path="/provider/verifyemail" element={<VerifyEmail />} />
           <Route path="/provider/verifymobile" element={<VerifyMobile />} />
 
           <Route path="/mobile" element={<MobileOTP />} />
           <Route path="/firebase" element={<FirebaseImageUpload />} />
+
+          <Route path="/admin" element={<Homepage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>
