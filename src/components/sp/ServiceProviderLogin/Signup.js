@@ -23,8 +23,14 @@ import StepLabel from "@mui/material/StepLabel";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { cities } from "../../../data/cities";
 import { services } from "../../../data/services";
+import { state } from "../../../data/state";
 
-const steps = ["Personal Information", "Professional Information"];
+const steps = [
+  "Personal Information",
+  "Professional Information",
+  "Email verification",
+  "Mobile Verification",
+];
 
 export default function SignUp() {
   const dataObj = {
@@ -42,6 +48,11 @@ export default function SignUp() {
     domain: "",
   };
   const [formData, setFormData] = useState(dataObj);
+  const [otp, setOTP] = useState("");
+  const [mobileOTPinput, setMobileOTPinput] = useState("");
+  const [OTPinput, setOTPinput] = useState("");
+  const [disable, setDisable] = useState(true);
+  const [timerCount, setTimer] = React.useState(60);
 
   const navigate = useNavigate();
   const navigateToSignIn = () => [navigate("/provider/login")];
@@ -107,9 +118,54 @@ export default function SignUp() {
       console.error("Signup Error:", error);
     }
   };
+  const OTPinputHandler = (e) => {
+    let str = e.target.value;
+    if (/^\d{0,4}$/.test(str)) {
+      setOTPinput(str);
+    }
+  };
+  const MobileOTPinputHandler = (e) => {
+    let str = e.target.value;
+    if (/^\d{0,6}$/.test(str)) {
+      setMobileOTPinput(str);
+    }
+  };
+  const resendOTP = async () => {
+    if (disable) return;
+    const OTP = Math.floor(Math.random() * 9000 + 1000);
+    await axios
+      .post("http://localhost:8000/send_recovery_email", {
+        OTP,
+        recipient_email: formData.email,
+      })
+      .then(() => setOTP(OTP))
+      .then(() => setDisable(true))
+      .then(() => alert("A new OTP has succesfully been sent to your email."))
+      .then(() => setTimer(60))
+      .catch(console.log);
+  };
+  const sendOTPtogivenMobile = async (e) => {
+    e.preventDefault();
+
+    const mobile = "+" + formData.mobile;
+    console.log(mobile);
+
+    try {
+      await axios
+        .post("http://localhost:8000/sendOTP", {
+          mobile,
+        })
+        .then((response) => {
+          console.log(response);
+          toast.success("OTP sent to given number!");
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleNext = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (activeStep === 0) {
       if (
         formData.fname &&
@@ -149,9 +205,42 @@ export default function SignUp() {
         formData.city
       ) {
         if (await validMobile(formData.mobile)) {
-          await handleSubmit(e);
-          alert("Account succesfully created");
-          navigateToServiceProviderHomePage();
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        } else {
+          alert("Enter valid mobile number");
+        }
+      } else {
+        alert("Enter all the information");
+      }
+    }
+    if (activeStep === 2) {
+      try {
+        if (OTPinput == otp) {
+          await sendOTPtogivenMobile(e);
+          setTimer(60);
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          return;
+        } else {
+          toast.error(
+            "The code you have entered is not correct, try again or re-send the link"
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (activeStep === 3) {
+      if (
+        formData.mobile &&
+        formData.profession &&
+        formData.location &&
+        formData.city
+      ) {
+        if (await validMobile(formData.mobile)) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          // await handleSubmit(e);
+          // alert("Account succesfully created");
+          // navigateToServiceProviderHomePage();
         } else {
           alert("Enter valid mobile number");
         }
@@ -360,15 +449,29 @@ export default function SignUp() {
                           </Select>
                         </FormControl>
                       </Grid>
+
                       <Grid item xs={12}>
-                        <TextField
-                          required
-                          fullWidth
-                          name="location"
-                          label="Location"
-                          value={formData.location}
-                          onChange={inputHandler}
-                        />
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">
+                            State
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={formData.city}
+                            label="City"
+                            name="city"
+                            onChange={inputHandler}
+                          >
+                            {state.map((obj) => {
+                              return (
+                                <MenuItem value={obj.value}>
+                                  {obj.value}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        </FormControl>
                       </Grid>
                       <Grid item xs={12}>
                         <FormControl fullWidth>
@@ -393,6 +496,16 @@ export default function SignUp() {
                           </Select>
                         </FormControl>
                       </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          required
+                          fullWidth
+                          name="location"
+                          label="Location"
+                          value={formData.location}
+                          onChange={inputHandler}
+                        />
+                      </Grid>
 
                       {/* this is hidden field...just paatiya....aana vagar width set noti thati  */}
                       <Grid item xs={12} sx={{ visibility: "hidden" }}>
@@ -406,6 +519,103 @@ export default function SignUp() {
                         />
                       </Grid>
                       <Grid item xs={12} sx={{ visibility: "hidden" }}></Grid>
+                    </Grid>
+                  </React.Fragment>
+                )}
+                {activeStep === 2 && (
+                  <Box sx={{ width: "20rem" }}>
+                    <Box
+                      sx={{
+                        fontSize: "1.3rem",
+                        mt: "1rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Email Verification
+                    </Box>
+                    <Box>
+                      <Box
+                        sx={{
+                          fontSize: "1rem",
+                          mt: "2rem",
+                          alignSelf: "center",
+                        }}
+                      >
+                        We have sent a code to this email : {formData.email}
+                      </Box>
+                    </Box>
+                    <Box component="form" noValidate sx={{ mt: 1 }}>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="otp"
+                        label="Enter 4 digit OTP"
+                        name="otp"
+                        autoComplete="otp"
+                        autoFocus
+                        value={OTPinput}
+                        onChange={OTPinputHandler}
+                      />
+                    </Box>
+
+                    <Box sx={{ display: "flex", mt: "0.5rem", mb: "3rem" }}>
+                      <Box>Didn't recieve code?</Box>&nbsp;
+                      <Box
+                        style={{
+                          color: disable ? "gray" : "blue",
+                          cursor: disable ? "none" : "pointer",
+                          textDecorationLine: disable ? "none" : "underline",
+                        }}
+                        onClick={() => resendOTP()}
+                      >
+                        {disable
+                          ? ` Resend OTP in ${timerCount}s`
+                          : " Resend OTP"}
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+                {activeStep === 3 && (
+                  <React.Fragment>
+                    <Grid container spacing={2} sx={{ ml: "1rem" }}>
+                      <Box>
+                        <Box
+                          sx={{
+                            fontSize: "1.3rem",
+                            mt: "2rem",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Mobile Verification
+                        </Box>
+                        <Box>
+                          <Box
+                            sx={{
+                              fontSize: "1rem",
+                              mt: "2rem",
+                              alignSelf: "center",
+                            }}
+                          >
+                            We have sent a code to this number :{" +"}
+                            {formData.mobile}
+                          </Box>
+                        </Box>
+                        <Box component="form" noValidate sx={{ mt: 1 }}>
+                          <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="otp"
+                            label="Enter 6 digit OTP"
+                            name="otp"
+                            autoComplete="otp"
+                            autoFocus
+                            value={mobileOTPinput}
+                            onChange={MobileOTPinputHandler}
+                          />
+                        </Box>
+                      </Box>
                     </Grid>
                   </React.Fragment>
                 )}

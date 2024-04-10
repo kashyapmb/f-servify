@@ -28,6 +28,20 @@ import Favorite from "./components/user/Favorites/Favorite";
 import VerifyEmail from "./components/sp/Verification/VerifyEmail";
 import VerifyMobile from "./components/sp/Verification/VerifyMobile";
 import Homepage from "./components/admin/Homepage";
+
+import Booking from "./components/sp/Booking/Booking";
+import Dashboard from "./components/sp/Dashboard/Dashboard";
+import TakenService from "./components/user/TakenServices/TakenService";
+import DoPayment from "./components/sp/Payment/DoPayment";
+import Plans from "./components/sp/Payment/Plans";
+import PaymentStep1 from "./components/sp/Payment/PaymentStep1";
+import PaymentStep2 from "./components/sp/Payment/PaymentStep2";
+import Qr from "./components/sp/Payment/Qr";
+import Upi from "./components/sp/Payment/Upi";
+import NetBanking from "./components/sp/Payment/NetBanking";
+import CardPay from "./components/sp/Payment/CardPay";
+import Reviews from "./components/sp/Reviews/Reviews";
+
 function App() {
   return (
     <>
@@ -45,6 +59,8 @@ function App() {
           <Route path="/user/:city/:servicename/:id" element={<SPDetails />} />
           <Route path="/user/:city/:servicename/:id" element={<SPDetails />} />
           <Route path="/user/favorites" element={<Favorite />} />
+          <Route path="/user/takenservices" element={<TakenService />} />
+
 
           <Route path="/provider" element={<ProviderHome />} />
           <Route path="/provider/login" element={<Login />} />
@@ -59,6 +75,22 @@ function App() {
           />
           <Route path="/provider/verifyemail" element={<VerifyEmail />} />
           <Route path="/provider/verifymobile" element={<VerifyMobile />} />
+
+          <Route path="/provider/booking" element={<Booking />} />
+          <Route path="/provider/payment" element={<DoPayment />} />
+          <Route path="/provider/paymentstep1" element={<PaymentStep1 />} />
+          <Route path="/provider/paymentstep2" element={<PaymentStep2 />} />
+          <Route path="/provider/paymentstep2/qr" element={<Qr />} />
+          <Route path="/provider/paymentstep2/upi" element={<Upi />} />
+          <Route
+            path="/provider/paymentstep2/netbanking"
+            element={<NetBanking />}
+          />
+          <Route path="/provider/paymentstep2/card" element={<CardPay />} />
+          <Route path="/provider/plans" element={<Plans />} />
+          <Route path="/provider/dashboard" element={<Dashboard />} />
+          <Route path="/provider/reviews" element={<Reviews />} />
+
 
           <Route path="/mobile" element={<MobileOTP />} />
           <Route path="/firebase" element={<FirebaseImageUpload />} />

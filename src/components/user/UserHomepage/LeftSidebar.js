@@ -6,10 +6,13 @@ import { MdCloudDone, MdPersonSearch } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 function LeftSidebar() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const gotoFavorites = () => {
-    navigate('/user/favorites')    
-  }
+    navigate("/user/favorites");
+  };
+  const gototakenservice = () => {
+    navigate("/user/takenservices");
+  };
   return (
     <>
       <Box
@@ -54,7 +57,15 @@ function LeftSidebar() {
             </Box>
           </Box>
           <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.7rem",
+                cursor: "pointer",
+              }}
+              onClick={gototakenservice}
+            >
               <MdCloudDone />
               <Box>Taken Services</Box>
             </Box>

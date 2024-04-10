@@ -21,6 +21,7 @@ import { services } from "../../../data/services";
 import { MdHome } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
+import Dashboard from "../Dashboard/Dashboard";
 
 function MainArea(props) {
   const { provider } = props;
@@ -108,6 +109,9 @@ function MainArea(props) {
             </Box>
           </Box>
         </Box>
+
+        {/* Dashboard */}
+        <Dashboard/>
       </Box>
     </>
   );

@@ -27,10 +27,12 @@ import axios from "axios";
 import Grid from "@mui/material/Grid";
 import LeftSidebar from "./LeftSidebar";
 import RightSidebar from "./RightSidebar";
+import { useParams } from "react-router-dom";
 
 function SPDetails() {
   const [id, setId] = useState();
   const [providerData, setProviderData] = useState({});
+  const userId = localStorage.getItem("userId");
 
   const setProviderID = async () => {
     // fetch id from  url
@@ -38,6 +40,7 @@ function SPDetails() {
     const parts = currentURL.split("/");
     setId(parts[parts.length - 1]);
   };
+
   const getProviderData = async () => {
     try {
       const response = await axios.get(
@@ -55,7 +58,7 @@ function SPDetails() {
       await getProviderData();
     };
     fetchData();
-  });
+  }, [id]);
 
   return (
     <>
@@ -66,7 +69,11 @@ function SPDetails() {
             <LeftSidebar providerData={providerData} />
           </Grid>
           <Grid item xs={3}>
-            <RightSidebar />
+            <RightSidebar
+              userId={userId}
+              providerId={id}
+              providerData={providerData}
+            />
           </Grid>
           <Grid item xs={1}></Grid>
         </Grid>

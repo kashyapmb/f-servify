@@ -21,9 +21,19 @@ import { cities } from "../../../data/cities";
 import { MdHome } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./SearchBar";
 
-function RightSidebar(props) {
+function MainArea(props) {
   const { city, setCity, user } = props;
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const userId = localStorage.getItem("userId");
+
+  // Filtered services based on search query
+  const filteredServices = services.filter((service) =>
+    service.value.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const navigate = useNavigate();
 
@@ -49,7 +59,6 @@ function RightSidebar(props) {
 
   const deleteToken = () => {
     localStorage.removeItem("userToken");
-    localStorage.removeItem("userId");
     window.location.reload();
   };
 
@@ -130,18 +139,14 @@ function RightSidebar(props) {
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center",
                     gap: "1rem",
                   }}
                 >
-                  <img
-                    src={user.profilePhoto}
-                    style={{
-                      width: "3rem",
-                      height: "3rem",
-                      borderRadius: "50%",
-                      cursor: "pointer",
-                    }}
+                  <Avatar
+                    {...stringAvatar(
+                      `${user.fname.toUpperCase()} ${user.lname.toUpperCase()}`
+                    )}
+                    sx={{ bgcolor: "orange", cursor: "pointer" }}
                     onClick={navigatetoUserProfile}
                   />
                   <Button
@@ -164,7 +169,8 @@ function RightSidebar(props) {
         </Box>
 
         {/* services component */}
-        <Box sx={{ marginTop: "1rem" }}>
+        {/* <Box sx={{ marginTop: "1rem" }}>
+          
           <Box sx={{ fontSize: "1.3rem", fontWeight: "600", margin: "1rem 0" }}>
             Services
           </Box>
@@ -212,10 +218,71 @@ function RightSidebar(props) {
               </Box>
             ))}
           </Box>
+        </Box> */}
+
+        <Box>
+          <Box sx={{ marginTop: "1rem" }}>
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              userId={userId}
+            />
+            <Box
+              sx={{ fontSize: "1.3rem", fontWeight: "600", margin: "1rem 0" }}
+            >
+              Services
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "3rem",
+                flexWrap: "wrap",
+              }}
+            >
+              {filteredServices.map((option) => (
+                <Box
+                  key={option.id} // Assuming each service has a unique id
+                  sx={{
+                    width: "10rem",
+                    height: "10rem",
+                    borderRadius: "11px",
+                    background: "#ffffff",
+                    transition: "0.5s",
+                    boxShadow: " 8px 8px 28px #dbdbdb, -8px -8px 28px #ffffff",
+
+                    ":hover": {
+                      borderRadius: "11px",
+                      background: "linear-gradient(145deg,  #ffffff, #e6e6e6)",
+                      boxShadow:
+                        "15px 15px 30px #bfbfbf, -15px -15px 30px #ffffff",
+                    },
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => selectedService(option)}
+                >
+                  <img
+                    src={`images/services/${option.img}`}
+                    style={{
+                      width: "5rem",
+                      // mixBlendMode: "multiply",
+                    }}
+                    alt={option.value}
+                  />
+                  <Box sx={{ textAlign: "center", margin: "0.5rem" }}>
+                    {option.value}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Box>
         </Box>
 
         {/* your search activity */}
-        {/* <Box sx={{ marginTop: "1rem" }}>
+        <Box sx={{ marginTop: "1rem" }}>
           <Box
             sx={{
               fontSize: "1.3rem",
@@ -279,10 +346,10 @@ function RightSidebar(props) {
               </Card>
             ))}
           </Box>
-        </Box> */}
+        </Box>
 
         {/* Suggested Profiles */}
-        {/* <Box sx={{ marginTop: "1rem" }}>
+        <Box sx={{ marginTop: "1rem" }}>
           <Box
             sx={{
               fontSize: "1.3rem",
@@ -346,10 +413,10 @@ function RightSidebar(props) {
               </Card>
             ))}
           </Box>
-        </Box> */}
+        </Box>
       </Box>
     </>
   );
 }
 
-export default RightSidebar;
+export default MainArea;

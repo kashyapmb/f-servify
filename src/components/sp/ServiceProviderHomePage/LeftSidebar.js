@@ -2,7 +2,8 @@ import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { AiFillHome, AiOutlineHome } from "react-icons/ai";
-import { MdError } from "react-icons/md";
+import { FaAddressBook, FaList } from "react-icons/fa";
+import { MdDashboard, MdError, MdOutlineRateReview } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 function LeftSidebar(props) {
@@ -18,6 +19,18 @@ function LeftSidebar(props) {
   };
   const gotoVerifyMobile = () => {
     navigate("/provider/verifymobile");
+  };
+  const gotoBooking = () => {
+    navigate("/provider/booking");
+  };
+  const gotoDashboard = () => {
+    navigate("/provider/dashboard");
+  };
+  const gotoPlans = () => {
+    navigate("/provider/plans");
+  };
+  const gotoReviews = () => {
+    navigate("/provider/reviews");
   };
 
   return (
@@ -42,12 +55,61 @@ function LeftSidebar(props) {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <img src="images/servifyLogo.png" style={{ width: "12rem" }} />
         </Box>
-        <Box sx={{ mt: "2rem", ml: "3rem", fontSize: "1.4rem" }}>
+        <Box sx={{ mt: "2rem", ml: "3rem", fontSize: "1.4rem", display:'flex', flexDirection:'column', gap:'1.5rem' }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
             <AiFillHome />
             <Box>Home</Box>
           </Box>
-          {!provider.emailverified && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.7rem",
+              cursor: "pointer",
+            }}
+            onClick={gotoBooking}
+          >
+            <FaAddressBook />
+            <Box>Bookings</Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.7rem",
+              cursor: "pointer",
+            }}
+            onClick={gotoDashboard}
+          >
+            <MdDashboard />
+            <Box>Dashboard</Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.7rem",
+              cursor: "pointer",
+            }}
+            onClick={gotoPlans}
+          >
+            <FaList />
+            <Box>Plans</Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.7rem",
+              cursor: "pointer",
+            }}
+            onClick={gotoReviews}
+          >
+            <MdOutlineRateReview />
+            <Box>Reviews</Box>
+          </Box>
+
+          {/* {!provider.emailverified && (
             <Box
               sx={{
                 display: "flex",
@@ -76,7 +138,7 @@ function LeftSidebar(props) {
               <MdError color="red" />
               <Box>Mobile not verified</Box>
             </Box>
-          )}
+          )} */}
         </Box>
       </Box>
     </>

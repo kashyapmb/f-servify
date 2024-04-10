@@ -61,7 +61,7 @@ function ProviderHome() {
             <Grid item xs={3}>
               <LeftSidebar provider={provider} />
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={9}>
               <RightSidebar provider={provider} />
             </Grid>
           </Grid>
