@@ -218,7 +218,6 @@ function LeftSidebar({ providerData }) {
   const handleDialogClose = () => {
     setDialogOpen(false);
     window.location.reload();
-
   };
 
   useEffect(() => {
@@ -422,27 +421,32 @@ function LeftSidebar({ providerData }) {
         </Box>
         {reviews.map((obj, index) => {
           return (
-            <Box sx={{ mt: "2rem", pl: "4rem" }}>
+            <Box sx={{ mt: "2rem", p: "0rem 4rem" }}>
+              {index > 0 && <hr style={{marginBottom:'2rem'}} />}
+
               <Box sx={{ display: "flex", gap: "1rem" }}>
                 <img
                   src={obj.profileimg}
                   style={{
                     width: "3rem",
+                    height: "3rem",
                     borderRadius: "50%",
                   }}
                 />
                 <Box>
-                  <Box>
+                  <Box sx={{ fontSize: "1.1rem", fontWeight: "600" }}>
                     {obj.fname} {obj.lname}
+                  </Box>
+                  <Box sx={{ mb: "0.5rem", fontSize: "0.9rem" }}>
+                    {obj.createdAt}
                   </Box>
                   <Box>
                     <Rating name="read-only" value={obj.rating} readOnly />
                   </Box>
+                  <Box>
+                    <Box>{obj.review}</Box>
+                  </Box>
                 </Box>
-              </Box>
-              <Box sx={{ ml: "4rem" }}>{obj.review}</Box>
-              <Box sx={{ mt: "0.5rem", fontSize: "0.9rem" }}>
-                {obj.createdAt}
               </Box>
             </Box>
           );

@@ -15,8 +15,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchEnquiryData = async () => {
       try {
+        const pID = localStorage.getItem('providerId')
         const response = await axios.get(
-          "http://localhost:8000/api/dashboard/dashboard/65ef0f67de93a74483105234"
+          `http://localhost:8000/api/dashboard/dashboard/${pID}`
         );
         setEnquiryData(response.data);
       } catch (error) {
@@ -29,7 +30,7 @@ const Dashboard = () => {
 
   const contents = [
     {
-      title: "Total Enquiries",
+      title: "Pending Enquiries",
       count: enquiryData?.enquired || 0,
       imgurl: "/images/orders.png",
     },

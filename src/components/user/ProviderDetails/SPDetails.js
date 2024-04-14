@@ -28,6 +28,8 @@ import Grid from "@mui/material/Grid";
 import LeftSidebar from "./LeftSidebar";
 import RightSidebar from "./RightSidebar";
 import { useParams } from "react-router-dom";
+import LoadingAnimation from "../../utils/LoadingAnimation";
+import Header from "../Header";
 
 function SPDetails() {
   const [id, setId] = useState();
@@ -47,6 +49,7 @@ function SPDetails() {
         `http://localhost:8000/api/provider/getone/${id}`
       );
       setProviderData(response.data);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -60,10 +63,23 @@ function SPDetails() {
     fetchData();
   }, [id]);
 
+  const [loading, setLoading] = useState(true);
+
+  if (loading) return <LoadingAnimation />;
+
   return (
     <>
       <Box sx={{ height: "100%", padding: "1rem" }}>
         <Grid container>
+          
+          {/* Header  */}
+          <Grid item xs={1}></Grid>
+          <Grid item xs={10}>
+            <Header />
+          </Grid>
+          <Grid item xs={1}></Grid>
+
+          {/* Provider Information  */}
           <Grid item xs={1}></Grid>
           <Grid item xs={7}>
             <LeftSidebar providerData={providerData} />

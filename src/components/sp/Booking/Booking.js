@@ -237,12 +237,13 @@ const Booking = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "3rem" }}>
       <Tabs
         value={value}
         onChange={handleChange}
         aria-label="Tabs example"
         centered
+        style={{ padding: "1rem", border: "1px solid black" }}
       >
         <Tab label="your Enquiries" />
         <Tab label="Done enquiries" />

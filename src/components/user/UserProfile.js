@@ -20,6 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useParams } from "react-router-dom";
 import { cities } from "../../data/cities";
 import "./UserProfile.css";
+import { ContactlessOutlined } from "@mui/icons-material";
 
 function UserProfile() {
   const { userId } = useParams();
@@ -37,11 +38,15 @@ function UserProfile() {
   }, [userId]);
 
   const getUserDetails = async () => {
-    const response = await axios.get(
-      `http://localhost:8000/api/user/getone/${userId}`
-    );
-    setUser(response.data);
-    setEditedUser(response.data); // Initialize editedUser state with fetched data
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/user/getone/${userId}`
+      );
+      setUser(response.data);
+      setEditedUser(response.data); // Initialize editedUser state with fetched data
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -49,22 +54,30 @@ function UserProfile() {
   }, [editedUser]);
 
   useEffect(() => {
-    const sendDetails = async () => {
-      const response = await axios.put(
-        `http://localhost:8000/api/user/updateDetails/${userId}`,
-        editedUser1
-      );
-      console.log(response);
-    };
-    const sendDetailsUserEdited = async () => {
-      const response = await axios.put(
-        `http://localhost:8000/api/admin/userediteddata`,
-        editedUser1
-      );
-      console.log(response);
-    };
-    sendDetails();
-    sendDetailsUserEdited();
+    try {
+      const sendDetails = async () => {
+        const response = await axios.put(
+          `http://localhost:8000/api/user/updateDetails/${userId}`,
+          editedUser1
+        );
+        console.log(response);
+      };
+      const sendDetailsUserEdited = async () => {
+        try {
+          const response = await axios.put(
+            `http://localhost:8000/api/admin/userediteddata`,
+            editedUser1
+          );
+          console.log(response);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      sendDetails();
+      sendDetailsUserEdited();
+    } catch (error) {
+      console.log(error);
+    }
   }, [editedUser1]);
 
   const handleEdit = () => {
@@ -149,17 +162,21 @@ function UserProfile() {
   };
 
   const updateDetailINDatabase = async (updatedUser) => {
-    console.log("This come", updatedUser);
-    const response = await axios.put(
-      `http://localhost:8000/api/user/updateDetails/${userId}`,
-      updatedUser
-    );
-    console.log(response);
-    const res = await axios.post(
-      `http://localhost:8000/api/admin/userediteddata`,
-      updatedUser
-    );
-    console.log(res);
+    try {
+      console.log("This come", updatedUser);
+      const response = await axios.put(
+        `http://localhost:8000/api/user/updateDetails/${userId}`,
+        updatedUser
+      );
+      console.log(response);
+      const res = await axios.post(
+        `http://localhost:8000/api/admin/userediteddata`,
+        updatedUser
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

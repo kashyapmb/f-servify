@@ -15,6 +15,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
+import { toHaveStyle } from "@testing-library/jest-dom/matchers";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const defaultTheme = createTheme();
 
@@ -59,9 +62,14 @@ export default function Login() {
                 password,
               }
             );
-            const token = response.data.token;
-            localStorage.setItem("providerToken", token);
-            navigateToProviderHomePage();
+            if (response.data.approved) {
+              const token = response.data.token;
+
+              localStorage.setItem("providerToken", token);
+              navigateToProviderHomePage();
+            } else {
+              toast.error("Wait until we approved your profile");
+            }
           } catch (error) {
             setInvalidPassError(true);
           }
@@ -109,6 +117,8 @@ export default function Login() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
+        <Toaster />
+
         <CssBaseline />
 
         <Box

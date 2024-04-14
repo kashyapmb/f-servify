@@ -42,7 +42,7 @@ function LeftSidebar() {
               <Box>Home</Box>
             </Box>
           </Box>
-          <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
+          {/* <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
             <Box
               sx={{
                 display: "flex",
@@ -55,7 +55,7 @@ function LeftSidebar() {
               <FaHeart />
               <Box>Favorites</Box>
             </Box>
-          </Box>
+          </Box> */}
           <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
             <Box
               sx={{

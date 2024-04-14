@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import React from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function UserType() {
@@ -10,6 +11,14 @@ function UserType() {
   const navigateProviderLogin = () => {
     navigate("/provider/login");
   };
+  useEffect(() => {
+    if (localStorage.getItem("providerToken")) {
+      localStorage.removeItem("providerToken");
+    }
+    if (localStorage.getItem("providerId")) {
+      localStorage.removeItem("providerId");
+    }
+  }, []);
   return (
     <>
       <Box

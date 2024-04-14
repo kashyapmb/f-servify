@@ -66,7 +66,7 @@ function RightSidebar({ userId, providerId, providerData }) {
 
   const handleDialogueClose = () => {
     setIsDialogueOpen(false);
-    // window.location.reload();
+    window.location.reload();
 
   };
 

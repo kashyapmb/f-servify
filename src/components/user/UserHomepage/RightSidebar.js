@@ -282,7 +282,7 @@ function MainArea(props) {
         </Box>
 
         {/* your search activity */}
-        <Box sx={{ marginTop: "1rem" }}>
+        {/* <Box sx={{ marginTop: "1rem" }}>
           <Box
             sx={{
               fontSize: "1.3rem",
@@ -346,10 +346,10 @@ function MainArea(props) {
               </Card>
             ))}
           </Box>
-        </Box>
+        </Box> */}
 
         {/* Suggested Profiles */}
-        <Box sx={{ marginTop: "1rem" }}>
+        {/* <Box sx={{ marginTop: "1rem" }}>
           <Box
             sx={{
               fontSize: "1.3rem",
@@ -413,7 +413,7 @@ function MainArea(props) {
               </Card>
             ))}
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </>
   );

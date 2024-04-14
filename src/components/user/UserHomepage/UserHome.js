@@ -15,6 +15,12 @@ function UserHome() {
   const [userId, setUserId] = useState();
 
   useEffect(() => {
+    if (localStorage.getItem("providerToken")) {
+      localStorage.removeItem("providerToken")
+    }
+    if (localStorage.getItem("providerId")) {
+      localStorage.removeItem("providerId")
+    }
     if (city == "") {
       setCity(localStorage.getItem("servifyCityName") || "");
     }
