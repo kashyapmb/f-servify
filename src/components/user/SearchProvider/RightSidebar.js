@@ -272,7 +272,7 @@ import {
 } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
+import { FaRupeeSign, FaStar } from "react-icons/fa";
 import { MdOutlineReviews } from "react-icons/md";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import axios from "axios";
@@ -444,7 +444,7 @@ function RightSidebar() {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={8}>
+                    <Grid item xs={9.5}>
                       <Box
                         sx={{
                           marginLeft: "2rem",
@@ -477,6 +477,31 @@ function RightSidebar() {
                                 }}
                               />
                             )}
+                        </Box>
+
+                        {/* vising charge  */}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+
+                            fontSize: "1rem",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Vising charge:{" "}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              margin: "0 1rem",
+                              padding: "0.1rem 1rem",
+                              background: "#a5d6a7",
+                              borderRadius: "0.3rem",
+                            }}
+                          >
+                            <FaRupeeSign /> {obj.visitcharge}
+                          </Box>
                         </Box>
                         {/* profession  */}
                         <Box sx={{ fontWeight: "500" }}>{obj.profession}</Box>

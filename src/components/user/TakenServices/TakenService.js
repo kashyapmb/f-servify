@@ -340,7 +340,7 @@ const TakenService = () => {
             background: "#e4f5fc",
             padding: "0rem",
             width: "100%",
-            borderRadius: "1rem 0 0 0",
+            borderRadius: "1rem 1rem 0 0",
             marginBottom: "1rem",
           }}
         >

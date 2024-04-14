@@ -198,7 +198,7 @@
 import { Box, Grid, Rating, Button } from "@mui/material";
 import React, { useEffect } from "react";
 import { MdError, MdVerified } from "react-icons/md";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaRupeeSign } from "react-icons/fa";
 import { useState } from "react";
 import axios from "axios";
 import ReviewDialog from "./ReviewDialog";
@@ -327,7 +327,8 @@ function LeftSidebar({ providerData }) {
               <Box sx={{ fontSize: "1.3rem", color: "blue" }}>
                 {providerData.profession}
               </Box>
-              <Box sx={{ mt: "3rem", fontSize: "1.2rem" }}>
+
+              <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
                 <Box sx={{ fontSize: "1rem", opacity: "0.7" }}>
                   BASIC INFORMATION{" "}
                 </Box>
@@ -341,7 +342,7 @@ function LeftSidebar({ providerData }) {
                 </Box>
               </Box>
 
-              <Box sx={{ mt: "3rem", fontSize: "1.2rem" }}>
+              <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
                 <Box sx={{ fontSize: "1rem", opacity: "0.7" }}>
                   CONTACT INFORMATION{" "}
                 </Box>
@@ -362,6 +363,34 @@ function LeftSidebar({ providerData }) {
                 <Box sx={{ display: "flex" }}>
                   <Box>City : &nbsp;</Box>
                   <Box>{providerData.city}</Box>
+                </Box>
+              </Box>
+              <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
+                <Box sx={{ fontSize: "1rem", opacity: "0.7" }}>
+                  PAYMENT INFORMATION{" "}
+                </Box>
+                <Box
+                  sx={{
+                    mt: "0.2rem",
+                    display: "flex",
+                    alignItems: "center",
+
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  Fix Vising charge:{" "}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      margin: "0 0.4rem",
+                    }}
+                  >
+                    <FaRupeeSign /> {providerData.visitcharge}
+                  </Box>
+                </Box>
+                <Box sx={{ mt: "0.2rem", fontSize: "0.9rem", display: "flex" }}>
+                  *Service charges may vary depending on your service
                 </Box>
               </Box>
             </Grid>
@@ -412,7 +441,7 @@ function LeftSidebar({ providerData }) {
         {reviews.map((obj, index) => {
           return (
             <Box sx={{ mt: "2rem", p: "0rem 4rem" }}>
-              {index > 0 && <hr style={{marginBottom:'2rem'}} />}
+              {index > 0 && <hr style={{ marginBottom: "2rem" }} />}
 
               <Box sx={{ display: "flex", gap: "1rem" }}>
                 <img
