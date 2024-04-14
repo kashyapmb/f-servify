@@ -350,20 +350,10 @@ function LeftSidebar({ providerData }) {
                 >
                   <Box>Mobile : &nbsp;</Box>
                   <Box>+91 {providerData.mobile} &nbsp;</Box>
-                  {providerData.mobileverified ? (
-                    <MdVerified color="green" />
-                  ) : (
-                    <MdError color="red" size={20} />
-                  )}
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Box>E-mail : &nbsp;</Box>
                   <Box>{providerData.email} &nbsp;</Box>
-                  {providerData.emailverified ? (
-                    <MdVerified color="green" />
-                  ) : (
-                    <MdError color="red" size={20} />
-                  )}
                 </Box>
                 <Box sx={{ display: "flex" }}>
                   <Box>Location : &nbsp;</Box>

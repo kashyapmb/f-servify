@@ -12,6 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Grid,
 } from "@mui/material";
 import LeftSidebar from "./UserHomepage/LeftSidebar";
 import { imageDb } from "../firebaseImageupload/Config";
@@ -21,6 +22,7 @@ import { useParams } from "react-router-dom";
 import { cities } from "../../data/cities";
 import "./UserProfile.css";
 import { ContactlessOutlined } from "@mui/icons-material";
+import Header from "./Header";
 
 function UserProfile() {
   const { userId } = useParams();
@@ -180,351 +182,199 @@ function UserProfile() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        width: "100%",
-        justifyContent: "center",
-        mt: "3rem",
-      }}
-    >
-      <Box
-        style={{
-          width: "40%",
-          borderRadius: "10px",
-          padding: "2rem",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(8.6px)",
-        }}
-      >
-        <Box
-          sx={{ fontSize: "1.5rem", textDecoration: "underline", mb: "2rem" }}
-        >
-          Profile
-        </Box>
-        {edit ? (
-          <Box>
-            <Box sx={{ display: "flex", gap: "2rem" }}>
-              <Box
-                className="container_image"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={handleClickImage}
-              >
-                {isHovered && (
-                  <img
-                    src="/images/profileAnotherImage.jpg"
-                    alt="Image 2"
-                    className="upper_image"
-                  />
-                )}
-                <img
-                  className="bottom_image"
-                  src={selectedImage ? selectedImage : user.profilePhoto}
-                />
-                <input
-                  id="fileInput"
-                  type="file"
-                  onChange={imageInputHandler}
-                  style={{ display: "none" }}
-                />
-              </Box>
+    <>
+      <Box sx={{ height: "100%", background: "#ffffff", padding: "1rem" }}>
+        <Grid container>
+          <Grid xs={12}>
+            <Header />
+          </Grid>
 
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                  fontSize: "1.5rem",
-                }}
-              >
-                <Box sx={{ display: "flex", gap: "1rem" }}>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="fname"
-                    label="First Name"
-                    name="fname"
-                    value={editedUser.fname}
-                    onChange={inputHandler}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="lname"
-                    label="Last Name"
-                    name="lname"
-                    value={editedUser.lname}
-                    onChange={inputHandler}
-                  />
-                </Box>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="mobile"
-                  label="Mobile"
-                  name="mobile"
-                  value={editedUser.mobile}
-                  onChange={inputHandler}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="address"
-                  label="Address"
-                  name="address"
-                  value={editedUser.address}
-                  onChange={inputHandler}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="city"
-                  label="City"
-                  name="city"
-                  value={editedUser.city}
-                  onChange={inputHandler}
-                />
-              </Box>
-            </Box>
+          <Grid xs={3}></Grid>
+          <Grid xs={6}>
             <Box
-              sx={{
-                mt: "3rem",
-                display: "flex",
-                justifyContent: "center",
-                fontSize: "1.4rem",
-                cursor: "pointer",
-                border: "1px solid black",
-                transition: "0.5s",
-                ":hover": { background: "#2962ff", color: "white" },
+              style={{
+                borderRadius: "10px",
+                padding: "2rem",
+                boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                backdropFilter: "blur(8.6px)",
               }}
-              onClick={handleUpdate}
             >
-              Update
-            </Box>
-          </Box>
-        ) : (
-          <Box>
-            <Box sx={{ display: "flex", gap: "3rem" }}>
-              <img
-                src={user.profilePhoto}
-                style={{
-                  width: "10rem",
-                  height: "10rem",
-                  border: "1px solid black",
-                }}
-              />
-
               <Box
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
                   fontSize: "1.5rem",
+                  textDecoration: "underline",
+                  mb: "2rem",
                 }}
               >
+                Profile
+              </Box>
+              {edit ? (
                 <Box>
-                  {user.fname} {user.lname}
-                </Box>
-                <Box>Mobile : {user.mobile}</Box>
-                <Box>E-mail : {user.email}</Box>
-                <Box sx={{ display: "flex" }}>
-                  Address :&nbsp;
-                  {user.address ? (
-                    user.address
-                  ) : (
-                    <Box sx={{ opacity: "0.6" }}>not given</Box>
-                  )}
-                </Box>
-                <Box sx={{ display: "flex" }}>
-                  City :&nbsp;
-                  {user.city ? (
-                    user.city
-                  ) : (
-                    <Box sx={{ opacity: "0.6" }}>not given</Box>
-                  )}
-                </Box>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                mt: "3rem",
-                display: "flex",
-                justifyContent: "center",
-                fontSize: "1.4rem",
-                cursor: "pointer",
-                border: "1px solid black",
-                transition: "0.5s",
-                ":hover": { background: "#2962ff", color: "white" },
-              }}
-              onClick={handleEdit}
-            >
-              Edit
-            </Box>
-          </Box>
-        )}
-        {/* <Card style={styles.cardprofile}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div className="App">
-              {editable && (
-                <>
-                  <input
-                    type="file"
-                    onChange={(e) => setImg(e.target.files[0])}
-                  />
-                  <button onClick={handleClick}>Upload</button>
-                  <button onClick={handleDelete}>Remove Image</button>
-                </>
-              )}
-              {imageUrl && (
-                <div>
-                  <img
-                    src={imageUrl}
-                    alt="Uploaded"
-                    height="200px"
-                    width="200px"
-                  />
-                </div>
-              )}
-            </div>
-            <div
-              variant="h5"
-              style={{ fontSize: "2.5rem", marginLeft: "1rem" }}
-            >
-              {editable ? (
-                <TextField
-                  id="outlined-basic"
-                  label="first name"
-                  variant="outlined"
-                  name="fname"
-                  value={editedUser.fname}
-                  onChange={handleInputChange}
-                  style={styles.inputField}
-                />
-              ) : (
-                user.fname
-              )}
-            </div>
-            <div
-              variant="h5"
-              style={{ fontSize: "2.5rem", marginLeft: "1rem" }}
-            >
-              {editable ? (
-                <TextField
-                  id="outlined-basic"
-                  label="last name"
-                  variant="outlined"
-                  name="lname"
-                  value={editedUser.lname}
-                  onChange={handleInputChange}
-                  style={styles.inputField}
-                />
-              ) : (
-                user.lname
-              )}
-            </div>
-          </div>
-          <div style={styles.updatediv}>
-            {editable ? (
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="email"
-                variant="outlined"
-                name="email"
-                value={editedUser.email}
-                onChange={handleInputChange}
-                style={styles.inputField}
-                error={emailError !== ""}
-                helperText={emailError}
-              />
-            ) : (
-              <div variant="h5" style={styles.content}>
-                {user.email}
-              </div>
-            )}
-          </div>
+                  <Box sx={{ display: "flex", gap: "2rem" }}>
+                    <Box
+                      className="container_image"
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={handleClickImage}
+                    >
+                      {isHovered && (
+                        <img
+                          src="/images/profileAnotherImage.jpg"
+                          alt="Image 2"
+                          className="upper_image"
+                        />
+                      )}
+                      <img
+                        className="bottom_image"
+                        src={selectedImage ? selectedImage : user.profilePhoto}
+                      />
+                      <input
+                        id="fileInput"
+                        type="file"
+                        onChange={imageInputHandler}
+                        style={{ display: "none" }}
+                      />
+                    </Box>
 
-          <div style={styles.updatediv}>
-            {editable ? (
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="mobile"
-                variant="outlined"
-                name="mobile"
-                value={editedUser.mobile}
-                onChange={handleInputChange}
-                style={styles.inputField}
-                error={mobileError !== ""}
-                helperText={mobileError}
-              />
-            ) : (
-              <div variant="h5" style={styles.content}>
-                {user.mobile}
-              </div>
-            )}
-          </div>
-          <div style={styles.updatediv}>
-            {editable ? (
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="address"
-                variant="outlined"
-                name="address"
-                value={editedUser.address}
-                onChange={handleInputChange}
-                style={styles.inputField}
-              />
-            ) : (
-              <div variant="h5" style={styles.content}>
-                {user.address}
-              </div>
-            )}
-          </div>
-          <div style={styles.updatediv}>
-            {editable ? (
-              <div>
-                <InputLabel id="demo-simple-select-label">City</InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={editedUser.city}
-                  label="City"
-                  name="city"
-                  onChange={handleInputChange}
-                >
-                  {cities.map((obj) => {
-                    return <MenuItem value={obj.value}>{obj.value}</MenuItem>;
-                  })}
-                </Select>
-              </div>
-            ) : (
-              <div variant="h5" style={styles.content}>
-                {user.city}
-              </div>
-            )}
-          </div>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1rem",
+                        fontSize: "1.5rem",
+                      }}
+                    >
+                      <Box sx={{ display: "flex", gap: "1rem" }}>
+                        <TextField
+                          required
+                          fullWidth
+                          id="fname"
+                          label="First Name"
+                          name="fname"
+                          value={editedUser.fname}
+                          onChange={inputHandler}
+                        />
+                        <TextField
+                          required
+                          fullWidth
+                          id="lname"
+                          label="Last Name"
+                          name="lname"
+                          value={editedUser.lname}
+                          onChange={inputHandler}
+                        />
+                      </Box>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="address"
+                        label="Address"
+                        name="address"
+                        value={editedUser.address}
+                        onChange={inputHandler}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="city"
+                        label="City"
+                        name="city"
+                        value={editedUser.city}
+                        onChange={inputHandler}
+                      />
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Box
+                      sx={{
+                        width: "14rem",
+                        mt: "3rem",
+                        display: "flex",
+                        justifyContent: "center",
+                        fontSize: "1.4rem",
+                        cursor: "pointer",
+                        border: "1px solid black",
+                        transition: "0.5s",
+                        ":hover": { background: "#2962ff", color: "white" },
+                      }}
+                      onClick={handleUpdate}
+                    >
+                      Update
+                    </Box>
+                  </Box>
+                </Box>
+              ) : (
+                <Box>
+                  <Box sx={{ display: "flex", gap: "3rem" }}>
+                    <img
+                      src={user.profilePhoto}
+                      style={{
+                        width: "10rem",
+                        height: "10rem",
+                        border: "1px solid black",
+                      }}
+                    />
 
-          <Button
-            style={styles.updatebtn}
-            className="acceptedBtn"
-            variant="contained"
-            color="primary"
-            onClick={editable ? handleUpdate : handleEdit}
-          >
-            {editable ? "Update" : "Edit"}
-          </Button>
-        </Card> */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1rem",
+                        fontSize: "1.5rem",
+                      }}
+                    >
+                      <Box>
+                        {user.fname} {user.lname}
+                      </Box>
+                      <Box>Mobile : {user.mobile}</Box>
+                      <Box>E-mail : {user.email}</Box>
+                      <Box sx={{ display: "flex" }}>
+                        Address :&nbsp;
+                        {user.address ? (
+                          user.address
+                        ) : (
+                          <Box sx={{ opacity: "0.6" }}>not given</Box>
+                        )}
+                      </Box>
+                      <Box sx={{ display: "flex" }}>
+                        City :&nbsp;
+                        {user.city ? (
+                          user.city
+                        ) : (
+                          <Box sx={{ opacity: "0.6" }}>not given</Box>
+                        )}
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Box
+                      sx={{
+                        width: "14rem",
+                        mt: "3rem",
+                        display: "flex",
+                        justifySelf: "flex-end",
+                        justifyContent: "center",
+                        fontSize: "1.4rem",
+                        cursor: "pointer",
+                        border: "1px solid black",
+                        transition: "0.5s",
+                        ":hover": { background: "#2962ff", color: "white" },
+                      }}
+                      onClick={handleEdit}
+                    >
+                      Edit your profile
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+            </Box>
+          </Grid>
+          <Grid xs={3}></Grid>
+        </Grid>
       </Box>
-    </Box>
+    </>
   );
 }
 

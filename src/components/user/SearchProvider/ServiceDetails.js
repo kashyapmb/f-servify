@@ -21,7 +21,7 @@ function ServiceDetails() {
   };
 
   return (
-    <Box sx={{ height: "100%", background: "#f2f2f7", padding: "1rem" }}>
+    <Box sx={{ height: "100%", background: "#ffffff", padding: "1rem" }}>
       <Grid container>
         <Grid item xs={12}>
           <Header />

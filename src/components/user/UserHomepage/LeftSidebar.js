@@ -37,25 +37,21 @@ function LeftSidebar() {
         </Box>
         <Box sx={{ ml: "3rem" }}>
           <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
-              <AiFillHome />
-              <Box>Home</Box>
-            </Box>
-          </Box>
-          {/* <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: "0.7rem",
-                cursor: "pointer",
+                cursor: "default",
               }}
-              onClick={gotoFavorites}
             >
-              <FaHeart />
-              <Box>Favorites</Box>
+              <AiFillHome color="#551b27" />
+              <Box sx={{ color: "#551b27", textDecoration: "underline" }}>
+                Home
+              </Box>
             </Box>
-          </Box> */}
+          </Box>
+
           <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
             <Box
               sx={{
@@ -68,6 +64,20 @@ function LeftSidebar() {
             >
               <MdCloudDone />
               <Box>Taken Services</Box>
+            </Box>
+          </Box>
+          <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.7rem",
+                cursor: "pointer",
+              }}
+              onClick={gotoFavorites}
+            >
+              <FaHeart />
+              <Box>Favorites</Box>
             </Box>
           </Box>
           <Box sx={{ mt: "2rem", fontSize: "1.2rem" }}>

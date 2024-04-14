@@ -218,7 +218,8 @@ function MainArea(props) {
               </Box>
             ))}
           </Box>
-        </Box> */}
+        </Box> 
+        */}
 
         <Box>
           <Box sx={{ marginTop: "1rem" }}>

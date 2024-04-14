@@ -366,7 +366,6 @@ function RightSidebar() {
     localStorage.setItem("sortOption", selectedOption);
     setSortOption(selectedOption);
     window.location.reload();
-    
   };
 
   return (
@@ -435,11 +434,12 @@ function RightSidebar() {
                   onClick={() => clickedServiceProvider(obj)}
                 >
                   <Grid container>
-                    <Grid item xs={3}>
+                    <Grid item xs={2.5}>
                       <img
                         src={obj.profilePhoto}
                         style={{
                           width: "100%",
+
                           border: "0.2px solid #ebecf0",
                         }}
                       />

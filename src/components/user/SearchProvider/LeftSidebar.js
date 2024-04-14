@@ -61,12 +61,13 @@ function LeftSidebar() {
         {/* service img and name */}
         <Box
           sx={{
+
             width: "10rem",
             height: "10rem",
             borderRadius: "11px",
+            background: "#ffffff",
             transition: "0.5s",
-            background: "linear-gradient(145deg,  #ffffff, #e6e6e6)",
-            boxShadow: "15px 15px 30px #bfbfbf, -15px -15px 30px #ffffff",
+            boxShadow: " 8px 8px 28px #dbdbdb, -8px -8px 28px #ffffff",
 
             display: "flex",
             flexDirection: "column",
