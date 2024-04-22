@@ -4,14 +4,17 @@ import { AiFillHome, AiOutlineHome } from "react-icons/ai";
 import { FaHeart } from "react-icons/fa";
 import { MdCloudDone, MdPersonSearch } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
 
 function LeftSidebar() {
   const navigate = useNavigate();
-  const gotoFavorites = () => {
-    navigate("/user/favorites");
-  };
   const gototakenservice = () => {
-    navigate("/user/takenservices");
+    if (localStorage.getItem("userToken")) navigate("/user/takenservices");
+    else toast.error("You need to login first...");
+  };
+  const gotoFavorites = () => {
+    if (localStorage.getItem("userToken")) navigate("/user/favorites");
+    else toast.error("You need to login first...");
   };
   return (
     <>
@@ -32,6 +35,7 @@ function LeftSidebar() {
           top: "2rem",
         }}
       >
+
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <img src="images/servifyLogo.png" style={{ width: "12rem" }} />
         </Box>

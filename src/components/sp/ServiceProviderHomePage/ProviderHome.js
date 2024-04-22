@@ -7,6 +7,8 @@ import LeftSidebar from "./LeftSidebar";
 import RightSidebar from "./RightSidebar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LoadingAnimation from "../../utils/LoadingAnimation";
+
 
 function ProviderHome() {
   const navigate = useNavigate();
@@ -51,7 +53,7 @@ function ProviderHome() {
     }
   }, []);
 
-  if (loading) return <h1>Loading...</h1>;
+  if (loading) return <LoadingAnimation />;
 
   return (
     <>

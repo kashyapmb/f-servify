@@ -56,7 +56,7 @@ function LeftSidebar(props) {
           <img src="images/servifyLogo.png" style={{ width: "12rem" }} />
         </Box>
         <Box sx={{ mt: "2rem", ml: "3rem", fontSize: "1.4rem", display:'flex', flexDirection:'column', gap:'1.5rem' }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "0.7rem", cursor:'default' }}>
             <AiFillHome />
             <Box>Home</Box>
           </Box>

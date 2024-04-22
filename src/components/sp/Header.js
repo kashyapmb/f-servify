@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import { AiFillHome } from "react-icons/ai";
-import { MdCloudDone, MdFavorite, MdPersonSearch } from "react-icons/md";
+import { AiFillHome, AiOutlineHome } from "react-icons/ai";
+import { FaAddressBook, FaList } from "react-icons/fa";
+import {
+  MdCloudDone,
+  MdDashboard,
+  MdError,
+  MdOutlineRateReview,
+} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { FaHeart } from "react-icons/fa";
-import { Toaster, toast } from "react-hot-toast";
-
 function Header() {
   const navigate = useNavigate();
 
+  const goToBooking = () => {
+    navigate("/provider/booking");
+  };
+  const goToDashboard = () => {
+    navigate("/provider/dashboard");
+  };
+  const goToReviews = () => {
+    navigate("/provider/reviews");
+  };
+  const goToPlans = () => {
+    navigate("/provider/plans");
+  };
   const gotohome = () => {
-    navigate("/user");
-  };
-  const gototakenservice = () => {
-    if (localStorage.getItem("userToken")) navigate("/user/takenservices");
-    else toast.error("You need to login first...");
-  };
-  const gotofavorites = () => {
-    if (localStorage.getItem("userToken")) navigate("/user/favorites");
-    else toast.error("You need to login first...");
+    navigate("/provider");
   };
   return (
     <>
@@ -41,11 +48,10 @@ function Header() {
           fontSize: "1.2rem",
         }}
       >
-        <Toaster />
-
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <img src="/images/servifyLogo.png" style={{ width: "12rem" }} />
         </Box>
+        {/* home  */}
         <Box
           sx={{
             display: "flex",
@@ -58,6 +64,7 @@ function Header() {
           <AiFillHome />
           <Box>Home</Box>
         </Box>
+        {/* bookings  */}
         <Box
           sx={{
             display: "flex",
@@ -65,11 +72,26 @@ function Header() {
             gap: "0.7rem",
             cursor: "pointer",
           }}
-          onClick={gototakenservice}
+          onClick={goToBooking}
+        >
+          <FaAddressBook />
+
+          <Box>Bookings</Box>
+        </Box>
+        {/* Dashboard  */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.7rem",
+            cursor: "pointer",
+          }}
+          onClick={goToDashboard}
         >
           <MdCloudDone />
-          <Box>Taken Services</Box>
+          <Box>Dashboard</Box>
         </Box>
+        {/* Plan  */}
         <Box
           sx={{
             display: "flex",
@@ -77,10 +99,23 @@ function Header() {
             gap: "0.7rem",
             cursor: "pointer",
           }}
-          onClick={gotofavorites}
+          onClick={goToPlans}
         >
-          <FaHeart />
-          <Box>Favorites</Box>
+          <FaList />
+          <Box>Plans</Box>
+        </Box>
+        {/* reviews  */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.7rem",
+            cursor: "pointer",
+          }}
+          onClick={goToReviews}
+        >
+          <MdOutlineRateReview />
+          <Box>Reviews</Box>
         </Box>
       </Box>
     </>

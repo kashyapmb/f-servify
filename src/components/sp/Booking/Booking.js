@@ -223,11 +223,12 @@
 // export default Booking;
 
 import React from "react";
-import { Tab, Tabs } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import Tab1 from "./Tab1";
 import Tab2 from "./Tab2";
 import Tab3 from "./Tab3";
 import Tab4 from "./Tab4";
+import Header from "../Header";
 
 const Booking = () => {
   const [value, setValue] = React.useState(0);
@@ -237,40 +238,62 @@ const Booking = () => {
   };
 
   return (
-    <div style={{ marginTop: "3rem" }}>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        aria-label="Tabs example"
-        centered
-        style={{ padding: "1rem", border: "1px solid black" }}
+    <>
+      <Header />
+      <Box
+        sx={{
+          p: "0.3rem 0.3rem",
+          borderRadius: "1rem",
+          margin: "1rem",
+
+          /* From https://css.glass */
+          background: "rgba(255, 255, 255, 0.18)",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+          backdropFilter: "blur(8.6px)",
+
+          border: "1px solid white",
+        }}
       >
-        <Tab label="your Enquiries" />
-        <Tab label="Done enquiries" />
-        <Tab label="decline enquiries" />
-        <Tab label="cancel enquiries" />
-      </Tabs>
-      {value === 0 && (
-        <div role="tabpanel" hidden={value !== 0}>
-          <Tab1 />
-        </div>
-      )}
-      {value === 1 && (
-        <div role="tabpanel" hidden={value !== 1}>
-          <Tab2 />
-        </div>
-      )}
-      {value === 2 && (
-        <div role="tabpanel" hidden={value !== 2}>
-          <Tab3 />
-        </div>
-      )}
-      {value === 3 && (
-        <div role="tabpanel" hidden={value !== 3}>
-          <Tab4 />
-        </div>
-      )}
-    </div>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="Tabs example"
+          centered
+          style={{
+            background: "#e4f5fc",
+            padding: "0rem",
+            width: "100%",
+            borderRadius: "1rem 1rem 0 0",
+            marginBottom: "1rem",
+          }}
+        >
+          <Tab label="your Enquiries" />
+          <Tab label="Done enquiries" />
+          <Tab label="decline enquiries" />
+          <Tab label="cancel enquiries" />
+        </Tabs>
+        {value === 0 && (
+          <div role="tabpanel" hidden={value !== 0}>
+            <Tab1 />
+          </div>
+        )}
+        {value === 1 && (
+          <div role="tabpanel" hidden={value !== 1}>
+            <Tab2 />
+          </div>
+        )}
+        {value === 2 && (
+          <div role="tabpanel" hidden={value !== 2}>
+            <Tab3 />
+          </div>
+        )}
+        {value === 3 && (
+          <div role="tabpanel" hidden={value !== 3}>
+            <Tab4 />
+          </div>
+        )}
+      </Box>
+    </>
   );
 };
 

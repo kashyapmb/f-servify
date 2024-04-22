@@ -22,6 +22,7 @@ import { MdHome } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../Dashboard/Dashboard";
+import DashboardForHome from "./DashboardForHome";
 
 function MainArea(props) {
   const { provider } = props;
@@ -82,7 +83,7 @@ function MainArea(props) {
             justifyContent: "space-between",
           }}
         >
-          <Box>
+          <Box sx={{fontSize:'1.4rem', fontWeight:'600'}}>
             Welcome, {provider.fname} {provider.lname}
           </Box>
           <Box>
@@ -111,7 +112,7 @@ function MainArea(props) {
         </Box>
 
         {/* Dashboard */}
-        <Dashboard/>
+        <DashboardForHome />
       </Box>
     </>
   );

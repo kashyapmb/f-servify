@@ -4,9 +4,11 @@ import { useState } from "react";
 import { AiFillHome, AiOutlineHome } from "react-icons/ai";
 import { FaLocationArrow } from "react-icons/fa";
 import { services } from "../../../data/services";
+import { useParams } from "react-router-dom";
 
 function LeftSidebar() {
-  const city = localStorage.getItem("servifyCityName");
+  let { city } = useParams();
+  city = city.charAt(0).toUpperCase() + city.slice(1);
   const [domain, setDomain] = useState();
   const [obj, setObj] = useState({});
   useEffect(() => {
@@ -61,7 +63,6 @@ function LeftSidebar() {
         {/* service img and name */}
         <Box
           sx={{
-
             width: "10rem",
             height: "10rem",
             borderRadius: "11px",

@@ -22,6 +22,9 @@ import { MdHome } from "react-icons/md";
 import { GoHeart, GoHeartFill, GoStarFill } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import axios from "axios";
+
+import { Toaster, toast } from "react-hot-toast";
 
 function MainArea(props) {
   const { city, setCity, user } = props;
@@ -42,9 +45,9 @@ function MainArea(props) {
   }
 
   const selectedCity = (selectedcity) => {
-    setCity(selectedcity);
+    setFormData((prevData) => ({ ...prevData, ["city"]: selectedcity }));
+    setFormData((prevData) => ({ ...prevData, ["pincode"]: "" }));
     localStorage.setItem("servifyCityName", selectedcity);
-    console.log(city);
   };
 
   const selectedService = (option) => {
@@ -52,9 +55,13 @@ function MainArea(props) {
       alert("First of all select city");
       return;
     }
-    console.log(option);
-
-    navigate(`/user/${city.toLowerCase()}/${option.domain.toLowerCase()}`);
+    if (formData.pincode) {
+      navigate(
+        `/user/${formData.city.toLowerCase()}/${option.domain.toLowerCase()}`
+      );
+    } else {
+      toast.error("Enter pincode first");
+    }
   };
 
   const deleteToken = () => {
@@ -93,8 +100,76 @@ function MainArea(props) {
       children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
     };
   }
+
+  const [formData, setFormData] = useState({
+    enquiry_for: "",
+    pincode: "",
+    state: "",
+    city: "",
+    address: "",
+  });
+
+  const [errors, setErrors] = useState({
+    enquiry_for: "",
+    pincode: "",
+  });
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    if (name === "pincode") {
+      if (value.trim() === "") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          pincode: "Pincode is required",
+        }));
+      } else if (value.length !== 6) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          pincode: "Pincode should be 6 characters long.",
+        }));
+      } else {
+        try {
+          const response = await axios.get(
+            `https://api.postalpincode.in/pincode/${value}`
+          );
+
+          if (response.data && response.data[0].Status === "Success") {
+            const { State, District } = response.data[0].PostOffice[0];
+            setFormData((prevData) => ({
+              ...prevData,
+              state: State,
+              city: District,
+            }));
+            localStorage.setItem("pincode", value)
+            localStorage.setItem("servifyCityName", District)
+            setErrors((prevErrors) => ({
+              ...prevErrors,
+              pincode: "",
+            }));
+          } else {
+            setFormData((prevData) => ({
+              ...prevData,
+              state: "",
+              city: "",
+            }));
+            setErrors((prevErrors) => ({
+              ...prevErrors,
+              pincode: "Record not found for this pincode.",
+            }));
+          }
+        } catch (error) {
+          console.error("Error fetching state and city:", error);
+        }
+      }
+    }
+  };
+
   return (
     <>
+      <Toaster />
+
       <Box
         sx={{
           background: "#ffffff",
@@ -109,8 +184,20 @@ function MainArea(props) {
           sx={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "flex-start",
           }}
         >
+          <Box>
+            <TextField
+              label="Pincode"
+              name="pincode"
+              value={formData.pincode}
+              onChange={handleChange}
+              required
+              helperText={errors.pincode}
+              error={!!errors.pincode}
+            />
+          </Box>
           <Box>
             <TextField
               id="outlined-select-currency"
@@ -118,8 +205,7 @@ function MainArea(props) {
               label="city name"
               defaultValue="Select"
               helperText="Please select where u want the service"
-              value={city}
-              sx={{ width: "35rem" }}
+              value={formData.city}
             >
               {cities.map((option) => (
                 <MenuItem
@@ -223,18 +309,19 @@ function MainArea(props) {
 
         <Box>
           <Box sx={{ marginTop: "1rem" }}>
+            <Box
+              sx={{ fontSize: "1.3rem", fontWeight: "600", margin: "1rem 0" }}
+            >
+              Services
+            </Box>
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               userId={userId}
             />
             <Box
-              sx={{ fontSize: "1.3rem", fontWeight: "600", margin: "1rem 0" }}
-            >
-              Services
-            </Box>
-            <Box
               sx={{
+                mt: "1.5rem",
                 display: "flex",
                 gap: "3rem",
                 flexWrap: "wrap",

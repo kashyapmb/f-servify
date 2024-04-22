@@ -3,14 +3,14 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import BarChartComponent from "./BarChartComponent"; // Import your BarChart component
-import PieChartComponent from "./PieChartComponent"; // Import your PieChart component
+import BarChartComponent from "../Dashboard/BarChartComponent"; // Import your BarChart component
+import PieChartComponent from "../Dashboard/PieChartComponent"; // Import your PieChart component
 
 import { Avatar, Box } from "@mui/material";
 import axios from "axios";
 import Header from "../Header";
 
-const Dashboard = () => {
+const DashboardForHome = () => {
   const [enquiryData, setEnquiryData] = useState(null);
 
   useEffect(() => {
@@ -54,7 +54,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <Header />
       <Box sx={{ padding: "2rem 1rem" }}>
         <Box sx={{ display: "flex", gap: "2rem" }}>
           {contents.map((content, index) => (
@@ -131,4 +130,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardForHome;

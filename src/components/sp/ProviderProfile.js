@@ -273,7 +273,7 @@ function ProviderProfile() {
                   value={editedProvider.profession}
                   onChange={inputHandler}
                 />
-                <TextField
+                {/* <TextField
                   margin="dense"
                   required
                   fullWidth
@@ -282,7 +282,7 @@ function ProviderProfile() {
                   name="mobile"
                   value={editedProvider.mobile}
                   onChange={inputHandler}
-                />
+                /> */}
                 <TextField
                   margin="dense"
                   required
