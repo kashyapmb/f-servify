@@ -29,11 +29,15 @@ import {
   FaUserCheck,
   FaUsersCog,
 } from "react-icons/fa";
+import { BsUiChecks } from "react-icons/bs";
 import { useState } from "react";
 import Users from "./Users";
 import UserChanges from "./UserChanges";
 import ProviderChanges from "./ProviderChanges";
 import Providers from "./Providers";
+import Verification from "./Verification";
+import VerificationProvider from "./VerificationProvider";
+import { toast, Toaster } from "react-hot-toast";
 
 const drawerWidth = 240;
 
@@ -150,38 +154,43 @@ export default function Homepage() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Users", "User Changes", "Providers", "Provider Changes"].map(
-            (text, index) => (
-              <ListItem
-                key={text}
-                disablePadding
-                sx={{ display: "block" }}
-                onClick={() => setCT(index + 1)}
+          {[
+            "Verification",
+            "Users",
+            "User Changes",
+            "Providers",
+            "Provider Changes",
+          ].map((text, index) => (
+            <ListItem
+              key={text}
+              disablePadding
+              sx={{ display: "block" }}
+              onClick={() => setCT(index + 1)}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
               >
-                <ListItemButton
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {index === 0 && <FaRegUser />}
-                    {index === 1 && <FaUsersCog />}
-                    {index === 2 && <FaTools />}
-                    {index === 3 && <FaUserCheck />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            )
-          )}
+                  {index === 0 && <BsUiChecks />}
+                  {index === 1 && <FaRegUser />}
+                  {index === 2 && <FaUsersCog />}
+                  {index === 3 && <FaTools />}
+                  {index === 4 && <FaUserCheck />}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
 
         {/* <Divider /> */}
@@ -212,11 +221,14 @@ export default function Homepage() {
         </List> */}
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toaster />
         <DrawerHeader />
-        {ct === 1 && <Users />}
-        {ct === 2 && <UserChanges />}
-        {ct === 3 && <Providers />}
-        {ct === 4 && <ProviderChanges />}
+        {ct === 1 && <Verification setCT={setCT} />}
+        {ct === 2 && <Users />}
+        {ct === 3 && <UserChanges />}
+        {ct === 4 && <Providers />}
+        {ct === 5 && <ProviderChanges />}
+        {ct === 11 && <VerificationProvider setCT={setCT} />}
       </Box>
     </Box>
   );
